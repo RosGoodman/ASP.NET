@@ -1,42 +1,46 @@
 ﻿using MeticsManager.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MeticsManager.Controllers
 {
-    [Route("api/crud")]
     [ApiController]
+    [Route("api")]
     public class CrudController : ControllerBase
     {
         private readonly ValuesHolder _holder;
+        private WeatherController _controller;
 
         public CrudController(ValuesHolder holder)
         {
-            _holder = holder;
+            this._holder = holder;
+            _controller = new WeatherController(_holder.Weather);
         }
 
-        [HttpPost("create")]
-        public IActionResult Create([FromQuery] int temperatureC, DateTime date)
+        [HttpPost("set")]
+        public IActionResult Create([FromQuery] int temperatureC, [FromQuery] DateTime date)
         {
-            _holder.AddNewWeather(temperatureC, date);
+            WeatherInitializer.Seed(_holder);
+
             return Ok();
         }
 
-        [HttpGet("read")]
-        public IActionResult Read([FromQuery] DateTime startDate, DateTime endDate)
+        [HttpGet("get")]
+        public IActionResult Read([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
         {
-            List<WeatherModel> listResults = _holder.GetWeatherList(startDate, endDate);
-            if (listResults.Count == 0) NotFound();
-            return Ok(listResults);
+            List<WeatherModel> period = _controller.GetWeatherList(startDate, endDate);
+
+            if (period.Count == 0)
+                return NoContent();
+            else
+                return Ok(period);
         }
 
         [HttpPut("update")]
         public IActionResult Update([FromQuery] DateTime dateToUpdate, [FromQuery] int newTemperatureC)
         {
-            if (!_holder.ChangeTemperature(dateToUpdate, newTemperatureC))
+            if (!_controller.ChangeTemperature(dateToUpdate, newTemperatureC))
                 NotFound();
 
             return Ok();
@@ -45,7 +49,7 @@ namespace MeticsManager.Controllers
         [HttpDelete("delete")]
         public IActionResult Delete([FromQuery] DateTime date)
         {
-            _holder.DeleteData(date);
+            _controller.DeleteData(date);
             return Ok();
         }
     }

@@ -1,13 +1,17 @@
-﻿
-using MeticsManager.Models;
+﻿using MeticsManager.Models;
 using System;
 using System.Collections.Generic;
 
 namespace MeticsManager
 {
-    public class ValuesHolder
+    public class WeatherController
     {
         private List<WeatherModel> _weatherDiary = new List<WeatherModel>();
+
+        public WeatherController(List<WeatherModel> weatherDiary)
+        {
+            _weatherDiary = weatherDiary;
+        }
 
         /// <summary>Добавить данные за новый день.</summary>
         /// <param name="temperatureC">Температура С.</param>
