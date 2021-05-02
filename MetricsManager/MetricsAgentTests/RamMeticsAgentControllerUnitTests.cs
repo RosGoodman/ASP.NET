@@ -18,8 +18,6 @@ namespace MetricsAgentTests
         public void GetMetricsFromAgent_ReturnsOk()
         {
             //Arrange
-            DateTimeOffset fromTime = DateTimeOffset.FromUnixTimeSeconds(0);
-            DateTimeOffset toTime = DateTimeOffset.FromUnixTimeSeconds(100);
 
             //Act
             var result = _controller.GetMetricsFromAgent();

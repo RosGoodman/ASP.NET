@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 
-namespace MetricsAgent.Controllers
+namespace MetricsManager.Controllers
 {
     [Route("api/metrics/cpu")]
     [ApiController]
-    public class CpuMetricsAgentController : ControllerBase
+    public class CpuMetricsController : ControllerBase
     {
         [HttpGet("read")]
         public IActionResult Read()

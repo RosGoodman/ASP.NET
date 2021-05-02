@@ -1,17 +1,17 @@
-﻿using MetricsAgent.Controllers;
+﻿using MetricsManager.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using Xunit;
 
-namespace MetricsAgentTests
+namespace MetricsManagerTests
 {
-    public class HddMetricsAgentControllerUnitTests
+    public class RamMeticsControllerUnitTests
     {
-        private HddMetricsAgentController _controller;
+        private RamMeticsController _controller;
 
-        public HddMetricsAgentControllerUnitTests()
+        public RamMeticsControllerUnitTests()
         {
-            _controller = new HddMetricsAgentController();
+            _controller = new RamMeticsController();
         }
 
         [Fact]

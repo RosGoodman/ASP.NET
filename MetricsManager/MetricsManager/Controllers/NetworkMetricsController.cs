@@ -1,18 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 
-namespace MetricsAgent.Controllers
+namespace MetricsManager.Controllers
 {
-    [Route("api/metrics/cpu")]
+    [Route("api/mtrics/network")]
     [ApiController]
-    public class CpuMetricsAgentController : ControllerBase
+    public class NetworkMetricsController : ControllerBase
     {
-        [HttpGet("read")]
-        public IActionResult Read()
-        {
-            return Ok("подключение есть");
-        }
-
         [HttpGet("from/{fromTime}/to/{toTime}")]
         public IActionResult GetMetricsFromAgent([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
@@ -20,4 +14,3 @@ namespace MetricsAgent.Controllers
         }
     }
 }
-
