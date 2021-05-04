@@ -10,7 +10,7 @@ namespace MetricsManagerTests
 
         public AgentControllerUnitTests()
         {
-            _controller = new AgentController();
+            //_controller = new AgentController();
         }
 
         [Fact]

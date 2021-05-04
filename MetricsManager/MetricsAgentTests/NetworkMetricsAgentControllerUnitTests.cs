@@ -11,7 +11,7 @@ namespace MetricsAgentTests
 
         public NetworkMetricsAgentControllerUnitTests()
         {
-            _controller = new NetworkMetricsAgentController();
+            //_controller = new NetworkMetricsAgentController();
         }
 
         [Fact]

@@ -11,16 +11,17 @@ namespace MetricsManagerTests
 
         public RamMeticsControllerUnitTests()
         {
-            _controller = new RamMeticsController();
+            //_controller = new RamMeticsController();
         }
 
         [Fact]
         public void GetMetricsFromAgent_ReturnsOk()
         {
             //Arrange
+            int Id = 0;
 
             //Act
-            var result = _controller.GetMetricsFromAgent();
+            var result = _controller.GetMetricsFromAgent(Id);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace MetricsAgent.Controllers
@@ -7,15 +8,25 @@ namespace MetricsAgent.Controllers
     [ApiController]
     public class CpuMetricsAgentController : ControllerBase
     {
+        private readonly ILogger<CpuMetricsAgentController> _logger;
+
+        public CpuMetricsAgentController(ILogger<CpuMetricsAgentController> logger)
+        {
+            _logger = logger;
+            _logger.LogDebug(1, "NLog встроен в CpuMetricsAgentController");
+        }
+
         [HttpGet("read")]
         public IActionResult Read()
         {
+            _logger.LogInformation("Привет! Это наше первое сообщение в лог.");
             return Ok("подключение есть");
         }
 
         [HttpGet("from/{fromTime}/to/{toTime}")]
         public IActionResult GetMetricsFromAgent([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
+            _logger.LogInformation($"Запрос на получение метрик CPU (fromTime = {fromTime}, toTime = {toTime})");
             return Ok();
         }
     }

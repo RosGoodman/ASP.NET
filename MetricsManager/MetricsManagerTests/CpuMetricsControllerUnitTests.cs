@@ -11,7 +11,7 @@ namespace MetricsManagerTests
 
         public CpuMetricsControllerUnitTests()
         {
-            _controller = new CpuMetricsController();
+            //_controller = new CpuMetricsController();
         }
 
         [Fact]
@@ -20,9 +20,10 @@ namespace MetricsManagerTests
             //Arrange
             DateTimeOffset fromTime = DateTimeOffset.FromUnixTimeSeconds(0);
             DateTimeOffset toTime = DateTimeOffset.FromUnixTimeSeconds(100);
+            int Id = 0;
 
             //Act
-            var result = _controller.GetMetricsFromAgent(fromTime, toTime);
+            var result = _controller.GetMetricsFromAgent(Id, fromTime, toTime);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);

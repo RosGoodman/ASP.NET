@@ -11,7 +11,7 @@ namespace MetricsAgentTests
 
         public RamMeticsAgentControllerUnitTests()
         {
-            _controller = new RamMeticsAgentController();
+            //_controller = new RamMeticsAgentController();
         }
 
         [Fact]

@@ -11,7 +11,7 @@ namespace MetricsAgentTests
 
         public DotNetMetricsAgentControllerUnitTests()
         {
-            _controller = new DotNetMetricsAgentController();
+            //_controller = new DotNetMetricsAgentController();
         }
 
         [Fact]
