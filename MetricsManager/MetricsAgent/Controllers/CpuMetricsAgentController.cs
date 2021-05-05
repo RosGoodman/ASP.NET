@@ -23,10 +23,10 @@ namespace MetricsAgent.Controllers
             return Ok("подключение есть");
         }
 
-        [HttpGet("from/{fromTime}/to/{toTime}")]
-        public IActionResult GetMetricsFromAgent([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
+        [HttpGet("id/{id}/from/{fromTime}/to/{toTime}")]
+        public IActionResult GetMetricsFromAgent([FromRoute] int id, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
-            _logger.LogInformation($"Запрос на получение метрик CPU (fromTime = {fromTime}, toTime = {toTime})");
+            _logger.LogInformation($"Запрос на получение метрик CPU (agentId = {id}, fromTime = {fromTime}, toTime = {toTime})");
             return Ok();
         }
     }

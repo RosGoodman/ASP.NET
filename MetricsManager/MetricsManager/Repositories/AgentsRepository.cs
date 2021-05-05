@@ -1,32 +1,99 @@
 ﻿using MetricsManager.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 
 namespace MetricsManager.Repositories
 {
-    public class AgentsRepository
+    public interface IAgentRepository : IRepository<AgentModel>
     {
-        //тут пока пустые методы и заглушки
 
-        private List<AgentModel> _agents;
-        public AgentsRepository()
+    }
+
+    public class AgentsRepository : IAgentRepository
+    {
+        ////тут пока пустые методы и заглушки
+
+        //private List<AgentModel> _agents;
+        
+
+        //public void Create(AgentModel model)
+        //{
+        //    _agents.Add(model);
+        //}
+
+        //public List<AgentModel> GetMetricsFromeTimeToTime(DateTimeOffset fromTime, DateTimeOffset toTime)
+        //{
+        //    return _agents;
+        //}
+
+        //public void Delete(int id)
+        //{
+
+        //}
+        private SQLiteConnection _connection;
+
+        public AgentsRepository(SQLiteConnection connection)
         {
-            _agents = new List<AgentModel>();
+            _connection = connection;
         }
 
-        public void Create(AgentModel model)
+        /// <summary>Получить весь список агентов.</summary>
+        /// <returns>Список агентов.</returns>
+        public IList<AgentModel> GetAll()
         {
-            _agents.Add(model);
+            using var cmd = new SQLiteCommand(_connection);
+            cmd.CommandText = "SELECT * FROM agents";
+            var returnList = new List<AgentModel>();
+            using (SQLiteDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    returnList.Add(new AgentModel
+                    {
+                        AgentId = reader.GetInt32(0),
+                        Name = reader.GetString(1)
+                    });
+                }
+            }
+
+            return returnList;
         }
 
-        public List<AgentModel> GetMetricsFromeTimeToTime(DateTimeOffset fromTime, DateTimeOffset toTime)
+        /// <summary>Получить агента по id.</summary>
+        /// <param name="id">id агента.</param>
+        /// <returns>Искомый агент или null.</returns>
+        public AgentModel GetById(int id)
         {
-            return _agents;
+            using var cmd = new SQLiteCommand(_connection);
+            cmd.CommandText = $"SELECT * FROM agents WHERE id = {id}";
+            using (SQLiteDataReader reader = cmd.ExecuteReader())
+            {
+                if (reader.Read())
+                {
+                    return new AgentModel
+                    {
+                        AgentId = reader.GetInt32(0),
+                        Name = reader.GetString(1)
+                    };
+                }
+                else return null;
+            }
         }
 
-        public void Delete(int id)
+        /// <summary>Добавить агента.</summary>
+        /// <param name="item">Модель добавляемого агента.</param>
+        public void Create(AgentModel item)
         {
+            using var cmd = new SQLiteCommand(_connection);
+            cmd.CommandText = $"INSERT INTO agents(name) VALUES('{item.Name}')";
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
+        }
 
+        public void Update(AgentModel item)
+        {
+            throw new NotImplementedException();
         }
     }
 }

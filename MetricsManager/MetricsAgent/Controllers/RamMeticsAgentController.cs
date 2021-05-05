@@ -15,10 +15,10 @@ namespace MetricsAgent.Controllers
             logger.LogDebug(1, "NLog встроен в RamMeticsAgentController");
         }
 
-        [HttpGet("available")]
-        public IActionResult GetMetricsFromAgent()
+        [HttpGet("available/id/{Id}")]
+        public IActionResult GetMetricsFromAgent([FromRoute] int id)
         {
-            _logger.LogInformation($"Запрос на получение метрик RAM");
+            _logger.LogInformation($"Запрос на получение метрик RAM (agentId = {id})");
             return Ok();
         }
     }

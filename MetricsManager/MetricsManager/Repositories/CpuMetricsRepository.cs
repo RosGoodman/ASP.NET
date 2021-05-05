@@ -1,32 +1,51 @@
 ﻿using MetricsManager.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 
 namespace MetricsManager.Repositories
 {
-    public class CpuMetricsRepository
+    // маркировочный интерфейс
+    // необходим, чтобы проверить работу репозитория на тесте-заглушке
+    public interface ICpuMetricsRepository : IRepository<CpuMetricsModel>
     {
-        //тут пока пустые методы и заглушки
 
-        private List<CpuMetricsModel> _cpuMetrics;
-        public CpuMetricsRepository()
-        {
-            _cpuMetrics = new List<CpuMetricsModel>();
-        }
+    }
+
+    public class CpuMetricsRepository : ICpuMetricsRepository
+    {
+        //private SQLiteConnection _connection;
+
+        //public CpuMetricsRepository(SQLiteConnection connection)
+        //{
+        //    _connection = connection;
+        //}
 
         public void Create(CpuMetricsModel model)
         {
-            _cpuMetrics.Add(model);
+            //using SQLiteCommand cmd = new SQLiteCommand(_connection);
+            //cmd.CommandText = $"INSERT INTO cpumetrics(idagent, value, time) VALUES({model.Value}, {model.DateTime.ToUnixTimeSeconds()}, {model.Id})";
+            //cmd.Prepare();
+            //cmd.ExecuteNonQuery();
         }
 
+        public IList<CpuMetricsModel> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public CpuMetricsModel GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(CpuMetricsModel item)
+        {
+            throw new NotImplementedException();
+        }
         public List<CpuMetricsModel> GetMetricsFromeTimeToTime(DateTimeOffset fromTime, DateTimeOffset toTime)
         {
-            return _cpuMetrics;
-        }
-
-        public void Delete(int id)
-        {
-
+            return null;
         }
     }
 }

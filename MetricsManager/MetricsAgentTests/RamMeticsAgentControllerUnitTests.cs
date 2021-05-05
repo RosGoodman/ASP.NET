@@ -18,9 +18,10 @@ namespace MetricsAgentTests
         public void GetMetricsFromAgent_ReturnsOk()
         {
             //Arrange
+            int id = 0;
 
             //Act
-            var result = _controller.GetMetricsFromAgent();
+            var result = _controller.GetMetricsFromAgent(id);
 
             // Assert
             _ = Assert.IsAssignableFrom<IActionResult>(result);

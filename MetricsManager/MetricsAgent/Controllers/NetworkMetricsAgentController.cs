@@ -16,10 +16,10 @@ namespace MetricsAgent.Controllers
             logger.LogDebug(1, "NLog встроен в NetworkMetricsAgentController");
         }
 
-        [HttpGet("from/{fromTime}/to/{toTime}")]
-        public IActionResult GetMetricsFromAgent([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
+        [HttpGet("id/{Id}/from/{fromTime}/to/{toTime}")]
+        public IActionResult GetMetricsFromAgent([FromRoute] int id, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
-            _logger.LogInformation($"Запрос на получение метрик Network (fromTime = {fromTime}, toTime = {toTime})");
+            _logger.LogInformation($"Запрос на получение метрик Network (agentId = {id}, fromTime = {fromTime}, toTime = {toTime})");
             return Ok();
         }
     }
