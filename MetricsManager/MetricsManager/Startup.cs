@@ -1,10 +1,8 @@
-using MetricsManager.Models;
 using MetricsManager.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Collections.Generic;
 using System.Data.SQLite;
 
 namespace MetricsManager
@@ -19,10 +17,10 @@ namespace MetricsManager
             ConfigureServiceConnection(services);
             services.AddSingleton<IAgentRepository, AgentsRepository>();
             services.AddSingleton<ICpuMetricsRepository, CpuMetricsRepository>();
-            services.AddSingleton<DotNetMetricsRepository>();
-            services.AddSingleton<HddMetricsRepository>();
-            services.AddSingleton<NetworkMetricsRepository>();
-            services.AddSingleton<RamMetricsRepository>();
+            services.AddSingleton<IDotNetMetricsRepository, DotNetMetricsRepository>();
+            services.AddSingleton<IHddMetricsRepository, HddMetricsRepository>();
+            services.AddSingleton<INetworkMetricsRepository, NetworkMetricsRepository>();
+            services.AddSingleton<IRamMetricsRepository, RamMetricsRepository>();
         }
 
         private void ConfigureServiceConnection(IServiceCollection services)
@@ -60,7 +58,7 @@ namespace MetricsManager
 
                 command.CommandText = "DROP TABLE IF EXISTS hddmetrics";
                 command.ExecuteNonQuery();
-                command.CommandText = @"CREATE TABLE hddmetrics(id INTEGER PRIMARY KEY, agentId INT, value DOUBLE, time INT,
+                command.CommandText = @"CREATE TABLE hddmetrics(id INTEGER PRIMARY KEY, agentId INT, value INT, time INT,
                     FOREIGN KEY(agentId) REFERENCES agents(id))";
                 command.ExecuteNonQuery();
 
@@ -72,7 +70,7 @@ namespace MetricsManager
 
                 command.CommandText = "DROP TABLE IF EXISTS rammetrics";
                 command.ExecuteNonQuery();
-                command.CommandText = @"CREATE TABLE rammetrics(id INTEGER PRIMARY KEY, agentId INT, value DOUBLE, time INT,
+                command.CommandText = @"CREATE TABLE rammetrics(id INTEGER PRIMARY KEY, agentId INT, value INT, time INT,
                     FOREIGN KEY(agentId) REFERENCES agents(id))";
                 command.ExecuteNonQuery();
 
@@ -105,9 +103,9 @@ namespace MetricsManager
                 command.CommandText = "INSERT INTO dotnetmetrics(agentId, value, time) VALUES(2, 99, 1578344400)";
                 command.ExecuteNonQuery();
 
-                command.CommandText = "INSERT INTO hddmetrics(agentId, value, time) VALUES(1, 1345.123, 1577998800)";
+                command.CommandText = "INSERT INTO hddmetrics(agentId, value, time) VALUES(1, 323232, 1577998800)";
                 command.ExecuteNonQuery();
-                command.CommandText = "INSERT INTO hddmetrics(agentId, value, time) VALUES(2, 12345.1234, 1578344400)";
+                command.CommandText = "INSERT INTO hddmetrics(agentId, value, time) VALUES(2, 121221, 1578344400)";
                 command.ExecuteNonQuery();
 
                 command.CommandText = "INSERT INTO networkmetrics(agentId, value, time) VALUES(1, 101, 1577998800)";
@@ -115,9 +113,9 @@ namespace MetricsManager
                 command.CommandText = "INSERT INTO networkmetrics(agentId, value, time) VALUES(2, 131, 1578344400)";
                 command.ExecuteNonQuery();
 
-                command.CommandText = "INSERT INTO rammetrics(agentId, value, time) VALUES(1, 1234.123, 1577998800)";
+                command.CommandText = "INSERT INTO rammetrics(agentId, value, time) VALUES(1, 86543, 1577998800)";
                 command.ExecuteNonQuery();
-                command.CommandText = "INSERT INTO rammetrics(agentId, value, time) VALUES(2, 222.22, 1578344400)";
+                command.CommandText = "INSERT INTO rammetrics(agentId, value, time) VALUES(2, 9652165, 1578344400)";
                 command.ExecuteNonQuery();
             }
         }

@@ -7,7 +7,7 @@ namespace MetricsManagerTests
 {
     public class RamMeticsControllerUnitTests
     {
-        private RamMeticsController _controller;
+        private RamMetricsController _controller;
 
         public RamMeticsControllerUnitTests()
         {

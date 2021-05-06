@@ -35,6 +35,15 @@ namespace MetricsManager.Controllers
             var metrics = _repository.GetById(id);
             return Ok(metrics);
         }
+
+        [HttpGet("all")]
+        public IActionResult GetMetricsAll()
+        {
+            _logger.LogInformation($"Запрос на получение метрик CPU всех агентов");
+
+            var metrics = _repository.GetAll();
+            return Ok(metrics);
+        }
     }
 }
 

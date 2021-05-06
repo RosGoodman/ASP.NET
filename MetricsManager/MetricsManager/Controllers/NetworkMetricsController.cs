@@ -1,26 +1,48 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MetricsManager.Repositories;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 
 namespace MetricsManager.Controllers
 {
-    [Route("api/mtrics/network")]
+    [Route("api/metrics/network")]
     [ApiController]
     public class NetworkMetricsController : ControllerBase
     {
         private readonly ILogger<NetworkMetricsController> _logger;
+        private readonly INetworkMetricsRepository _repository;
 
-        public NetworkMetricsController(ILogger<NetworkMetricsController> logger)
+        public NetworkMetricsController(INetworkMetricsRepository repository, ILogger<NetworkMetricsController> logger)
         {
+            _repository = repository;
             _logger = logger;
-            logger.LogDebug(1, "NLog встроен в NetworkMetricsController");
         }
 
-        [HttpGet("from/{fromTime}/to/{toTime}")]
-        public IActionResult GetMetricsFromAgent([FromRoute] int Id, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
+        [HttpGet("agentId/{id}/from/{fromTime}/to/{toTime}")]
+        public IActionResult GetMetricsFromAgent([FromRoute] int id, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
-            _logger.LogInformation($"Запрос на получение метрик Network (agentID = {Id}, fromTime = {fromTime}, toTime = {toTime})");
-            return Ok();
+            _logger.LogInformation($"Запрос на получение метрик Network (agentID = {id}, fromTime = {fromTime}, toTime = {toTime})");
+
+            var metrics = _repository.GetMetricsFromeTimeToTimeFromAgent(id, fromTime, toTime);
+            return Ok(metrics);
+        }
+
+        [HttpGet("agentId/{id}")]
+        public IActionResult GetMetricsFromAgent([FromRoute] int id)
+        {
+            _logger.LogInformation($"Запрос на получение метрик Network (agentID = {id})");
+
+            var metrics = _repository.GetById(id);
+            return Ok(metrics);
+        }
+
+        [HttpGet("all")]
+        public IActionResult GetMetricsAll()
+        {
+            _logger.LogInformation($"Запрос на получение метрик Network всех агентов");
+
+            var metrics = _repository.GetAll();
+            return Ok(metrics);
         }
     }
 }
