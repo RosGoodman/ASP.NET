@@ -93,9 +93,9 @@ namespace MetricsManager
                 command.CommandText = "INSERT INTO agents(name) VALUES('agent2')";
                 command.ExecuteNonQuery();
 
-                command.CommandText = "INSERT INTO cpumetrics(agentId, value, time) VALUES(1, 15, 1577998800)";
+                command.CommandText = "INSERT INTO cpumetrics(agentId, value, time) VALUES(1, 15, 1577998800)";     //1577998800 = 02.01.2020 21:00
                 command.ExecuteNonQuery();
-                command.CommandText = "INSERT INTO cpumetrics(agentId, value, time) VALUES(2, 100, 1578344400)";
+                command.CommandText = "INSERT INTO cpumetrics(agentId, value, time) VALUES(2, 100, 1578344400)";    //1578344400 = 06.01.2020 21:00
                 command.ExecuteNonQuery();
 
                 command.CommandText = "INSERT INTO dotnetmetrics(agentId, value, time) VALUES(1, 16, 1577998800)";

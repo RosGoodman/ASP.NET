@@ -86,7 +86,7 @@ namespace MetricsManager.Repositories
                     {
                         AgentId = reader.GetInt32(1),
                         Value = reader.GetInt32(2),
-                        DateTime = DateTimeOffset.FromUnixTimeSeconds(reader.GetInt32(3))
+                        DateTime = DateTimeOffset.FromUnixTimeSeconds(reader.GetInt64(3))
                     });
                 }
             }
