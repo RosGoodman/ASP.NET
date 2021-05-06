@@ -18,7 +18,7 @@ namespace MetricsManager
             services.AddControllers();
             ConfigureServiceConnection(services);
             services.AddSingleton<IAgentRepository, AgentsRepository>();
-            services.AddSingleton<CpuMetricsRepository>();
+            services.AddSingleton<ICpuMetricsRepository, CpuMetricsRepository>();
             services.AddSingleton<DotNetMetricsRepository>();
             services.AddSingleton<HddMetricsRepository>();
             services.AddSingleton<NetworkMetricsRepository>();
@@ -95,29 +95,29 @@ namespace MetricsManager
                 command.CommandText = "INSERT INTO agents(name) VALUES('agent2')";
                 command.ExecuteNonQuery();
 
-                command.CommandText = "INSERT INTO cpumetrics(agentId, value, time) VALUES(1, 15, 5)";
+                command.CommandText = "INSERT INTO cpumetrics(agentId, value, time) VALUES(1, 15, 1577998800)";
                 command.ExecuteNonQuery();
-                command.CommandText = "INSERT INTO cpumetrics(agentId, value, time) VALUES(2, 100, 20)";
-                command.ExecuteNonQuery();
-
-                command.CommandText = "INSERT INTO dotnetmetrics(agentId, value, time) VALUES(1, 16, 6)";
-                command.ExecuteNonQuery();
-                command.CommandText = "INSERT INTO dotnetmetrics(agentId, value, time) VALUES(2, 99, 11)";
+                command.CommandText = "INSERT INTO cpumetrics(agentId, value, time) VALUES(2, 100, 1578344400)";
                 command.ExecuteNonQuery();
 
-                command.CommandText = "INSERT INTO hddmetrics(agentId, value, time) VALUES(1, 1345.123, 7)";
+                command.CommandText = "INSERT INTO dotnetmetrics(agentId, value, time) VALUES(1, 16, 1577998800)";
                 command.ExecuteNonQuery();
-                command.CommandText = "INSERT INTO hddmetrics(agentId, value, time) VALUES(2, 12345.1234, 12)";
-                command.ExecuteNonQuery();
-
-                command.CommandText = "INSERT INTO networkmetrics(agentId, value, time) VALUES(1, 101, 8)";
-                command.ExecuteNonQuery();
-                command.CommandText = "INSERT INTO networkmetrics(agentId, value, time) VALUES(2, 131, 13)";
+                command.CommandText = "INSERT INTO dotnetmetrics(agentId, value, time) VALUES(2, 99, 1578344400)";
                 command.ExecuteNonQuery();
 
-                command.CommandText = "INSERT INTO rammetrics(agentId, value, time) VALUES(1, 1234.123, 9)";
+                command.CommandText = "INSERT INTO hddmetrics(agentId, value, time) VALUES(1, 1345.123, 1577998800)";
                 command.ExecuteNonQuery();
-                command.CommandText = "INSERT INTO rammetrics(agentId, value, time) VALUES(2, 222.22, 14)";
+                command.CommandText = "INSERT INTO hddmetrics(agentId, value, time) VALUES(2, 12345.1234, 1578344400)";
+                command.ExecuteNonQuery();
+
+                command.CommandText = "INSERT INTO networkmetrics(agentId, value, time) VALUES(1, 101, 1577998800)";
+                command.ExecuteNonQuery();
+                command.CommandText = "INSERT INTO networkmetrics(agentId, value, time) VALUES(2, 131, 1578344400)";
+                command.ExecuteNonQuery();
+
+                command.CommandText = "INSERT INTO rammetrics(agentId, value, time) VALUES(1, 1234.123, 1577998800)";
+                command.ExecuteNonQuery();
+                command.CommandText = "INSERT INTO rammetrics(agentId, value, time) VALUES(2, 222.22, 1578344400)";
                 command.ExecuteNonQuery();
             }
         }

@@ -12,25 +12,6 @@ namespace MetricsManager.Repositories
 
     public class AgentsRepository : IAgentRepository
     {
-        ////тут пока пустые методы и заглушки
-
-        //private List<AgentModel> _agents;
-        
-
-        //public void Create(AgentModel model)
-        //{
-        //    _agents.Add(model);
-        //}
-
-        //public List<AgentModel> GetMetricsFromeTimeToTime(DateTimeOffset fromTime, DateTimeOffset toTime)
-        //{
-        //    return _agents;
-        //}
-
-        //public void Delete(int id)
-        //{
-
-        //}
         private SQLiteConnection _connection;
 
         public AgentsRepository(SQLiteConnection connection)
@@ -89,11 +70,6 @@ namespace MetricsManager.Repositories
             cmd.CommandText = $"INSERT INTO agents(name) VALUES('{item.Name}')";
             cmd.Prepare();
             cmd.ExecuteNonQuery();
-        }
-
-        public void Update(AgentModel item)
-        {
-            throw new NotImplementedException();
         }
     }
 }

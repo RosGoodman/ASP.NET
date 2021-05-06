@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MetricsManager.Repositories;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 
@@ -9,24 +10,30 @@ namespace MetricsManager.Controllers
     public class CpuMetricsController : ControllerBase
     {
         private readonly ILogger<CpuMetricsController> _logger;
+        private readonly ICpuMetricsRepository _repository;
 
-        public CpuMetricsController(ILogger<CpuMetricsController> logger)
+        public CpuMetricsController(ICpuMetricsRepository repository, ILogger<CpuMetricsController> logger)
         {
+            _repository = repository;
             _logger = logger;
-            logger.LogDebug(1, "NLog встроен в CpuMetricsController");
         }
 
-        [HttpGet("read")]
-        public IActionResult Read()
+        [HttpGet("agentId/{id}/from/{fromTime}/to/{toTime}")]
+        public IActionResult GetMetricsFromAgent([FromRoute] int id, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
-            return Ok("подключение есть");
+            _logger.LogInformation($"Запрос на получение метрик CPU (agentID = {id}, fromTime = {fromTime}, toTime = {toTime})");
+
+            var metrics = _repository.GetMetricsFromeTimeToTimeFromAgent(id, fromTime, toTime);
+            return Ok(metrics);
         }
 
-        [HttpGet("from/{fromTime}/to/{toTime}")]
-        public IActionResult GetMetricsFromAgent([FromRoute] int Id, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
+        [HttpGet("agentId/{id}")]
+        public IActionResult GetMetricsFromAgent([FromRoute] int id)
         {
-            _logger.LogInformation($"Запрос на получение метрик CPU (agentID = {Id}, fromTime = {fromTime}, toTime = {toTime})");
-            return Ok();
+            _logger.LogInformation($"Запрос на получение метрик CPU (agentID = {id})");
+
+            var metrics = _repository.GetById(id);
+            return Ok(metrics);
         }
     }
 }

@@ -6,7 +6,6 @@ namespace MetricsManager.Repositories
     {
         IList<T> GetAll();
         T GetById(int id);
-        void Update(T item);
         void Create(T item);
     }
 }

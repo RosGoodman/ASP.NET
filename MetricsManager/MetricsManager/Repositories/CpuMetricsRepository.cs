@@ -1,4 +1,6 @@
-﻿using MetricsManager.Models;
+﻿using MetricsManager.Controllers;
+using MetricsManager.Models;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
@@ -9,43 +11,91 @@ namespace MetricsManager.Repositories
     // необходим, чтобы проверить работу репозитория на тесте-заглушке
     public interface ICpuMetricsRepository : IRepository<CpuMetricsModel>
     {
-
+        List<CpuMetricsModel> GetMetricsFromeTimeToTimeFromAgent(int id, DateTimeOffset fromTime, DateTimeOffset toTime);
     }
 
     public class CpuMetricsRepository : ICpuMetricsRepository
     {
-        //private SQLiteConnection _connection;
+        private SQLiteConnection _connection;
 
-        //public CpuMetricsRepository(SQLiteConnection connection)
-        //{
-        //    _connection = connection;
-        //}
+        public CpuMetricsRepository(SQLiteConnection connection)
+        {
+            _connection = connection;
+        }
 
         public void Create(CpuMetricsModel model)
         {
-            //using SQLiteCommand cmd = new SQLiteCommand(_connection);
-            //cmd.CommandText = $"INSERT INTO cpumetrics(idagent, value, time) VALUES({model.Value}, {model.DateTime.ToUnixTimeSeconds()}, {model.Id})";
-            //cmd.Prepare();
-            //cmd.ExecuteNonQuery();
+            using SQLiteCommand cmd = new(_connection);
+            cmd.CommandText = $"INSERT INTO cpumetrics(idagent, value, time) VALUES({model.AgentId}, {model.Value}, {model.DateTime.ToUnixTimeSeconds()})";
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
         }
 
         public IList<CpuMetricsModel> GetAll()
         {
-            throw new NotImplementedException();
+            using var cmd = new SQLiteCommand(_connection);
+            cmd.CommandText = "SELECT * FROM cpumetrics";
+            var returnList = new List<CpuMetricsModel>();
+
+            using (SQLiteDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    returnList.Add(new CpuMetricsModel
+                    {
+                        AgentId = reader.GetInt32(1),
+                        Value = reader.GetInt32(2),
+                        DateTime = DateTimeOffset.FromUnixTimeSeconds(reader.GetInt32(3))
+                    });
+                }
+            }
+
+            return returnList;
         }
 
         public CpuMetricsModel GetById(int id)
         {
-            throw new NotImplementedException();
+            using var cmd = new SQLiteCommand(_connection);
+            cmd.CommandText = $"SELECT * FROM cpumetrics WHERE agentId = {id}";
+
+            using (SQLiteDataReader reader = cmd.ExecuteReader())
+            {
+                if (reader.Read())
+                {
+                    return new CpuMetricsModel
+                    {
+                        AgentId = reader.GetInt32(1),
+                        Value = reader.GetInt32(2),
+                        DateTime = DateTimeOffset.FromUnixTimeSeconds(reader.GetInt32(3))
+                    };
+                }
+                else return null;
+            }
         }
 
-        public void Update(CpuMetricsModel item)
+        public List<CpuMetricsModel> GetMetricsFromeTimeToTimeFromAgent(int id, DateTimeOffset fromTime, DateTimeOffset toTime)
         {
-            throw new NotImplementedException();
-        }
-        public List<CpuMetricsModel> GetMetricsFromeTimeToTime(DateTimeOffset fromTime, DateTimeOffset toTime)
-        {
-            return null;
+            long from = fromTime.ToUnixTimeSeconds();
+            long to = toTime.ToUnixTimeSeconds();
+
+            using var cmd = new SQLiteCommand(_connection);
+            cmd.CommandText = $"SELECT * FROM cpumetrics WHERE time > {from} AND time < {to} AND agentId = {id}";
+            var returnList = new List<CpuMetricsModel>();
+
+            using (SQLiteDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    returnList.Add(new CpuMetricsModel
+                    {
+                        AgentId = reader.GetInt32(1),
+                        Value = reader.GetInt32(2),
+                        DateTime = DateTimeOffset.FromUnixTimeSeconds(reader.GetInt32(3))
+                    });
+                }
+            }
+
+            return returnList;
         }
     }
 }
