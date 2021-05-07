@@ -12,11 +12,12 @@ namespace MetricsManager.Repositories
 
     public class DotNetMetricsRepository : IDotNetMetricsRepository
     {
-        private SQLiteConnection _connection;
+        private static SQLiteConnection _connection;
 
         public void Create(DotNetMetricsModel model)
         {
-            _connection = new SQLiteConnection();
+            DBConnectionOpen();
+
             using SQLiteCommand cmd = new(_connection);
             cmd.CommandText = $"INSERT INTO dotnetmetrics(idagent, value, time) VALUES({model.AgentId}, {model.Value}, {model.DateTime.ToUnixTimeSeconds()})";
             cmd.Prepare();
@@ -26,7 +27,8 @@ namespace MetricsManager.Repositories
 
         public IList<DotNetMetricsModel> GetAll()
         {
-            _connection = new SQLiteConnection();
+            DBConnectionOpen();
+
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = "SELECT * FROM dotnetmetrics";
             var returnList = new List<DotNetMetricsModel>();
@@ -50,7 +52,8 @@ namespace MetricsManager.Repositories
 
         public DotNetMetricsModel GetById(int id)
         {
-            _connection = new SQLiteConnection();
+            DBConnectionOpen();
+
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = $"SELECT * FROM dotnetmetrics WHERE agentId = {id}";
 
@@ -101,6 +104,13 @@ namespace MetricsManager.Repositories
             _connection.Dispose();
 
             return returnList;
+        }
+
+        private static void DBConnectionOpen()
+        {
+            const string connectionString = "Data Source=Metrics.db";
+            _connection = new SQLiteConnection(connectionString);
+            _connection.Open();
         }
     }
 }

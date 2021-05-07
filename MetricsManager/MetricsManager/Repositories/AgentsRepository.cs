@@ -11,13 +11,14 @@ namespace MetricsManager.Repositories
 
     public class AgentsRepository : IAgentRepository
     {
-        private SQLiteConnection _connection;
+        private static SQLiteConnection _connection;
 
         /// <summary>Получить весь список агентов.</summary>
         /// <returns>Список агентов.</returns>
         public IList<AgentModel> GetAll()
         {
-            _connection = new SQLiteConnection();
+            DBConnectionOpen();
+
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = "SELECT * FROM agents";
             var returnList = new List<AgentModel>();
@@ -42,7 +43,8 @@ namespace MetricsManager.Repositories
         /// <returns>Искомый агент или null.</returns>
         public AgentModel GetById(int id)
         {
-            _connection = new SQLiteConnection();
+            DBConnectionOpen();
+
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = $"SELECT * FROM agents WHERE id = {id}";
             using (SQLiteDataReader reader = cmd.ExecuteReader())
@@ -70,12 +72,20 @@ namespace MetricsManager.Repositories
         /// <param name="item">Модель добавляемого агента.</param>
         public void Create(AgentModel item)
         {
-            _connection = new SQLiteConnection();
+            DBConnectionOpen();
+
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = $"INSERT INTO agents(name) VALUES('{item.Name}')";
             cmd.Prepare();
             cmd.ExecuteNonQuery();
             _connection.Dispose();
+        }
+
+        private static void DBConnectionOpen()
+        {
+            const string connectionString = "Data Source=Metrics.db";
+            _connection = new SQLiteConnection(connectionString);
+            _connection.Open();
         }
     }
 }

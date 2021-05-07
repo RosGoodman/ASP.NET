@@ -12,11 +12,12 @@ namespace MetricsManager.Repositories
 
     public class RamMetricsRepository : IRamMetricsRepository
     {
-        private SQLiteConnection _connection;
+        private static SQLiteConnection _connection;
 
         public void Create(RamMetricsModel model)
         {
-            _connection = new SQLiteConnection();
+            DBConnectionOpen();
+
             using SQLiteCommand cmd = new(_connection);
             cmd.CommandText = $"INSERT INTO rammetrics(idagent, value, time) VALUES({model.AgentId}, {model.Value}, {model.DateTime.ToUnixTimeSeconds()})";
             cmd.Prepare();
@@ -26,7 +27,8 @@ namespace MetricsManager.Repositories
 
         public IList<RamMetricsModel> GetAll()
         {
-            _connection = new SQLiteConnection();
+            DBConnectionOpen();
+
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = "SELECT * FROM rammetrics";
             var returnList = new List<RamMetricsModel>();
@@ -50,7 +52,8 @@ namespace MetricsManager.Repositories
 
         public RamMetricsModel GetById(int id)
         {
-            _connection = new SQLiteConnection();
+            DBConnectionOpen();
+
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = $"SELECT * FROM rammetrics WHERE agentId = {id}";
 
@@ -101,6 +104,13 @@ namespace MetricsManager.Repositories
             _connection.Dispose();
 
             return returnList;
+        }
+
+        private static void DBConnectionOpen()
+        {
+            const string connectionString = "Data Source=Metrics.db";
+            _connection = new SQLiteConnection(connectionString);
+            _connection.Open();
         }
     }
 }

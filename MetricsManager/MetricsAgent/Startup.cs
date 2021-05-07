@@ -28,6 +28,7 @@ namespace MetricsAgent
             connection.Open();
             PrepareSchema(connection);
             services.AddSingleton(connection);
+            connection.Dispose();
         }
 
         private static void PrepareSchema(SQLiteConnection connection)
