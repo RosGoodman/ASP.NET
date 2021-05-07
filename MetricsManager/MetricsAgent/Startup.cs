@@ -36,7 +36,7 @@ namespace MetricsAgent
             using var command = new SQLiteCommand(connection);
             command.CommandText = "DROP TABLE IF EXISTS cpumetrics";
             command.ExecuteNonQuery();
-            command.CommandText = @"CREATE TABLE cpumetrics(id INTEGER PRIMARY KEY,value INT, time INT)";
+            command.CommandText = @"CREATE TABLE cpumetrics(id INTEGER PRIMARY KEY, value INT, time INT)";
             command.ExecuteNonQuery();
 
             command.CommandText = "DROP TABLE IF EXISTS dotnetmetrics";
@@ -73,7 +73,7 @@ namespace MetricsAgent
             using var command = new SQLiteCommand(connection);
             command.CommandText = "INSERT INTO cpumetrics(value, time) VALUES(15, 1577998800)";     //1577998800 = 02.01.2020 21:00
             command.ExecuteNonQuery();
-            command.CommandText = "INSERT INTO cpumetrics(value, time) VALUES(15, 1577998800)";     //1577998800 = 02.01.2020 21:00
+            command.CommandText = "INSERT INTO cpumetrics(value, time) VALUES(100, 1578344400)";     //1577998800 = 02.01.2020 21:00
             command.ExecuteNonQuery();
 
             command.CommandText = "INSERT INTO dotnetmetrics(value, time) VALUES(16, 1577998800)";

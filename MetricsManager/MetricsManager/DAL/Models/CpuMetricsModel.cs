@@ -2,14 +2,12 @@
 
 namespace MetricsManager.Models
 {
-    public class DotNetMetricsModel
+    public class CpuMetricsModel
     {
         public int AgentId { get; set; }
 
-        public int Id { get; set; }
-
         public int Value { get; set; }
 
-        public DateTimeOffset DateTime { get; set; }
+        public DateTimeOffset Time { get; set; }
     }
 }

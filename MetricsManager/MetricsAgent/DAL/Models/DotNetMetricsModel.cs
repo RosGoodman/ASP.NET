@@ -2,12 +2,12 @@
 
 namespace MetricsAgent.Models
 {
-    public class RamMetricsModel
+    public class DotNetMetricsModel
     {
         public int Id { get; set; }
 
         public int Value { get; set; }
 
-        public DateTimeOffset DateTime { get; set; }
+        public DateTimeOffset Time { get; set; }
     }
 }

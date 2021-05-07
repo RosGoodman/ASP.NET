@@ -2,7 +2,7 @@
 
 namespace MetricsManager.Models
 {
-    public class NetworkMetricsModel
+    public class HddMetricsModel
     {
         public int AgentId { get; set; }
 
@@ -10,6 +10,6 @@ namespace MetricsManager.Models
 
         public int Value { get; set; }
 
-        public DateTimeOffset DateTime { get; set; }
+        public DateTimeOffset Time { get; set; }
     }
 }

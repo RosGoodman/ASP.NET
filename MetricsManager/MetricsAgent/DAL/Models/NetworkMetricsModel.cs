@@ -2,12 +2,12 @@
 
 namespace MetricsAgent.Models
 {
-    public class HddMetricsModel
+    public class NetworkMetricsModel
     {
         public int Id { get; set; }
 
         public int Value { get; set; }
 
-        public DateTimeOffset DateTime { get; set; }
+        public DateTimeOffset Time { get; set; }
     }
 }
