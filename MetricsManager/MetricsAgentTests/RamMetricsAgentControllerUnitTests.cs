@@ -7,17 +7,17 @@ using Xunit;
 
 namespace MetricsAgentTests
 {
-    public class NetworkMetricsAgentControllerUnitTests
+    public class RamMetricsAgentControllerUnitTests
     {
-        private NetworkMetricsAgentController _controller;
-        private Mock<INetworkMetricsRepository> _mock;
-        private Mock<ILogger<NetworkMetricsAgentController>> _logger;
+        private RamMetricsAgentController _controller;
+        private Mock<IRamMetricsRepository> _mock;
+        private Mock<ILogger<RamMetricsAgentController>> _logger;
 
-        public NetworkMetricsAgentControllerUnitTests()
+        public RamMetricsAgentControllerUnitTests()
         {
-            _mock = new Mock<INetworkMetricsRepository>();
-            _logger = new Mock<ILogger<NetworkMetricsAgentController>>();
-            _controller = new NetworkMetricsAgentController(_mock.Object, _logger.Object);
+            _mock = new Mock<IRamMetricsRepository>();
+            _logger = new Mock<ILogger<RamMetricsAgentController>>();
+            _controller = new RamMetricsAgentController(_mock.Object, _logger.Object);
         }
 
         [Fact]

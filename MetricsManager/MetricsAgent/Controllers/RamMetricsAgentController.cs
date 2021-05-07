@@ -28,7 +28,7 @@ namespace MetricsAgent.Controllers
         }
 
         [HttpGet("all")]
-        public IActionResult GetMetricsById()
+        public IActionResult GetMetrics()
         {
             _logger.LogInformation($"Запрос на получение метрик RAM");
             var metrics = _repository.GetAll();
