@@ -4,6 +4,9 @@ using Moq;
 using MetricsAgent.Repositories;
 using Microsoft.Extensions.Logging;
 using System;
+using AutoMapper;
+using MetricsAgent.Models;
+using MetricsAgent.Responses;
 
 namespace MetricsAgentTests
 {
@@ -12,34 +15,30 @@ namespace MetricsAgentTests
         private CpuMetricsAgentController _controller;
         private Mock<ICpuMetricsRepository> _mock;
         private Mock<ILogger<CpuMetricsAgentController>> _logger;
+        private MapperConfiguration _config;
+        private IMapper _mapper;
 
         public CpuMetricsAgentControllerUnitTests()
         {
             _mock = new Mock<ICpuMetricsRepository>();
             _logger = new Mock<ILogger<CpuMetricsAgentController>>();
-            _controller = new CpuMetricsAgentController(_mock.Object, _logger.Object);
+            _config = new MapperConfiguration(cfg => cfg.CreateMap<CpuMetricsModel, CpuMetricsDto>());
+            _mapper = _config.CreateMapper();
+
+            _controller = new CpuMetricsAgentController(_mapper, _mock.Object, _logger.Object);
         }
 
         [Fact]
         public void GetMetrics_ShouldCall_GetAll_From_Repository()
         {
             //Arrange
-
-            // устанавливаем параметр заглушки
-            // в заглушке прописываем что в репозиторий прилетит CpuMetric объект
             _mock.Setup(repository => repository.GetAll()).Verifiable();
 
             //Act
-
-            // выполняем действие на контроллере
             var result = _controller.GetMetrics();
 
             //Assert
-
-            // проверяем заглушку на то, что пока работал контроллер
-            // действительно вызвался метод Create репозитория с нужным типом объекта в параметре
             _mock.Verify(repository => repository.GetAll(), Times.AtMostOnce());
-
         }
 
         [Fact]

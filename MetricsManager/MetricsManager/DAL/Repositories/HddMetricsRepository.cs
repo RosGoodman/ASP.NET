@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using MetricsManager.DAL;
 using MetricsManager.Models;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,11 @@ namespace MetricsManager.Repositories
     public class HddMetricsRepository : IHddMetricsRepository
     {
         private const string ConnectionString = "Data Source=Metrics.db";
+
+        public HddMetricsRepository()
+        {
+            SqlMapper.AddTypeHandler(new DateTimeOffsetHandler());
+        }
 
         public void Create(HddMetricsModel model)
         {

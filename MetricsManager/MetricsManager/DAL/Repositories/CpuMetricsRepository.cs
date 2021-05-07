@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using MetricsManager.DAL;
 using MetricsManager.Models;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,11 @@ namespace MetricsManager.Repositories
     public class CpuMetricsRepository : ICpuMetricsRepository
     {
         private const string ConnectionString = "Data Source=Metrics.db";
+
+        public CpuMetricsRepository()
+        {
+            SqlMapper.AddTypeHandler(new DateTimeOffsetHandler());
+        }
 
         public void Create(CpuMetricsModel model)
         {
