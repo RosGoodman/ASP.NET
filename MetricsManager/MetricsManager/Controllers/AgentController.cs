@@ -1,7 +1,10 @@
-﻿using MetricsManager.Models;
+﻿using AutoMapper;
+using MetricsManager.Models;
 using MetricsManager.Repositories;
+using MetricsManager.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 
 namespace MetricsManager.Controllers
 {
@@ -22,10 +25,23 @@ namespace MetricsManager.Controllers
         [HttpGet("all")]
         public IActionResult GetAllAgents()
         {
-            _logger.LogInformation($"Запрос на получение всех агентов.");
+            _logger.LogInformation($"Запрос на получение агентов");
 
-            var metrics = _repository.GetAll();
-            return Ok(metrics);
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<AgentModel, AgentsDto>());
+            var m = config.CreateMapper();
+            IList<AgentModel> metrics = _repository.GetAll();
+
+            var response = new AllAgentsResponse()
+            {
+                Metrics = new List<AgentsDto>()
+            };
+
+            foreach (var metric in metrics)
+            {
+                response.Metrics.Add(m.Map<AgentsDto>(metric));
+            }
+
+            return Ok(response);
         }
 
         [HttpGet("AgentId/{id}")]
@@ -33,7 +49,17 @@ namespace MetricsManager.Controllers
         {
             _logger.LogInformation($"Запрос на получение данных агента (id = {id}).");
 
-            var metrics = _repository.GetById(id);
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<AgentModel, AgentsDto>());
+            var m = config.CreateMapper();
+            AgentModel metrics = _repository.GetById(id);
+
+            var response = new AllAgentsResponse()
+            {
+                Metrics = new List<AgentsDto>()
+            };
+            
+            response.Metrics.Add(m.Map<AgentsDto>(metrics));
+
             return Ok(metrics);
         }
 

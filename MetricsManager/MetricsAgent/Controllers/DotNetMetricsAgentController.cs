@@ -1,7 +1,11 @@
-﻿using MetricsAgent.Repositories;
+﻿using AutoMapper;
+using MetricsAgent.Models;
+using MetricsAgent.Repositories;
+using MetricsAgent.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 
 namespace MetricsAgent.Controllers
 {
@@ -23,7 +27,20 @@ namespace MetricsAgent.Controllers
         {
             _logger.LogInformation($"Запрос на получение метрик DotNet (id = {id}, fromTime = {fromTime}, toTime = {toTime})");
 
-            var metrics = _repository.GetMetricsFromeTimeToTime(id, fromTime, toTime);
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<DotNetMetricsModel, DotNetMetricsDto>());
+            var m = config.CreateMapper();
+            IList<DotNetMetricsModel> metrics = _repository.GetMetricsFromeTimeToTime(id, fromTime, toTime);
+
+            var response = new AllDotNetMetricsResponse()
+            {
+                Metrics = new List<DotNetMetricsDto>()
+            };
+
+            foreach (var metric in metrics)
+            {
+                response.Metrics.Add(m.Map<DotNetMetricsDto>(metric));
+            }
+
             return Ok(metrics);
         }
 
@@ -32,8 +49,22 @@ namespace MetricsAgent.Controllers
         {
             _logger.LogInformation($"Запрос на получение метрик DotNet");
 
-            var metrics = _repository.GetAll();
-            return Ok(metrics);
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<DotNetMetricsModel, DotNetMetricsDto>());
+            var m = config.CreateMapper();
+            IList<DotNetMetricsModel> metrics = _repository.GetAll();
+
+            var response = new AllDotNetMetricsResponse()
+            {
+                Metrics = new List<DotNetMetricsDto>()
+            };
+
+            foreach (var metric in metrics)
+            {
+                // добавляем объекты в ответ при помощи мапера
+                response.Metrics.Add(m.Map<DotNetMetricsDto>(metric));
+            }
+
+            return Ok(response);
         }
     }
 }
