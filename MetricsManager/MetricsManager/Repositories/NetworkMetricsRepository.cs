@@ -16,18 +16,19 @@ namespace MetricsManager.Repositories
 
         public void Create(NetworkMetricsModel model)
         {
-            DBConnectionOpen();
+            using var _connection = new SQLiteConnection("Data Source=Metrics.db");
+            _connection.Open();
 
             using SQLiteCommand cmd = new(_connection);
             cmd.CommandText = $"INSERT INTO networkmetrics(idagent, value, time) VALUES({model.AgentId}, {model.Value}, {model.DateTime.ToUnixTimeSeconds()})";
             cmd.Prepare();
             cmd.ExecuteNonQuery();
-            _connection.Dispose();
         }
 
         public IList<NetworkMetricsModel> GetAll()
         {
-            DBConnectionOpen();
+            using var _connection = new SQLiteConnection("Data Source=Metrics.db");
+            _connection.Open();
 
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = "SELECT * FROM networkmetrics";
@@ -45,14 +46,14 @@ namespace MetricsManager.Repositories
                     });
                 }
             }
-            _connection.Dispose();
 
             return returnList;
         }
 
         public NetworkMetricsModel GetById(int id)
         {
-            DBConnectionOpen();
+            using var _connection = new SQLiteConnection("Data Source=Metrics.db");
+            _connection.Open();
 
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = $"SELECT * FROM networkmetrics WHERE agentId = {id}";
@@ -61,21 +62,14 @@ namespace MetricsManager.Repositories
             {
                 if (reader.Read())
                 {
-                    NetworkMetricsModel model = new NetworkMetricsModel
+                    return new NetworkMetricsModel
                     {
                         AgentId = reader.GetInt32(1),
                         Value = reader.GetInt32(2),
                         DateTime = DateTimeOffset.FromUnixTimeSeconds(reader.GetInt32(3))
                     };
-                    _connection.Dispose();
-
-                    return model;
                 }
-                else
-                {
-                    _connection.Dispose();
-                    return null;
-                }
+                else return null;
             }
         }
 
@@ -84,7 +78,8 @@ namespace MetricsManager.Repositories
             long from = fromTime.ToUnixTimeSeconds();
             long to = toTime.ToUnixTimeSeconds();
 
-            DBConnectionOpen();
+            using var _connection = new SQLiteConnection("Data Source=Metrics.db");
+            _connection.Open();
 
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = $"SELECT * FROM networkmetrics WHERE time > {from} AND time < {to} AND agentId = {id}";
@@ -103,15 +98,7 @@ namespace MetricsManager.Repositories
                 }
             }
 
-            _connection.Dispose();
             return returnList;
-        }
-
-        private static void DBConnectionOpen()
-        {
-            const string connectionString = "Data Source=Metrics.db";
-            _connection = new SQLiteConnection(connectionString);
-            _connection.Open();
         }
     }
 }

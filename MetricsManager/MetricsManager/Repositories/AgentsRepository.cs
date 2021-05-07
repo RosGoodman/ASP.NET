@@ -17,7 +17,8 @@ namespace MetricsManager.Repositories
         /// <returns>Список агентов.</returns>
         public IList<AgentModel> GetAll()
         {
-            DBConnectionOpen();
+            using var _connection = new SQLiteConnection("Data Source=Metrics.db");
+            _connection.Open();
 
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = "SELECT * FROM agents";
@@ -33,7 +34,6 @@ namespace MetricsManager.Repositories
                     });
                 }
             }
-            _connection.Dispose();
 
             return returnList;
         }
@@ -43,7 +43,8 @@ namespace MetricsManager.Repositories
         /// <returns>Искомый агент или null.</returns>
         public AgentModel GetById(int id)
         {
-            DBConnectionOpen();
+            using var _connection = new SQLiteConnection("Data Source=Metrics.db");
+            _connection.Open();
 
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = $"SELECT * FROM agents WHERE id = {id}";
@@ -51,20 +52,13 @@ namespace MetricsManager.Repositories
             {
                 if (reader.Read())
                 {
-                    AgentModel model = new AgentModel
+                    return new AgentModel
                     {
                         AgentId = reader.GetInt32(0),
                         Name = reader.GetString(1)
                     };
-                    _connection.Dispose();
-
-                    return model;
                 }
-                else
-                {
-                    _connection.Dispose();
-                    return null;
-                }
+                else return null;
             }
         }
 
@@ -72,20 +66,13 @@ namespace MetricsManager.Repositories
         /// <param name="item">Модель добавляемого агента.</param>
         public void Create(AgentModel item)
         {
-            DBConnectionOpen();
+            using var _connection = new SQLiteConnection("Data Source=Metrics.db");
+            _connection.Open();
 
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = $"INSERT INTO agents(name) VALUES('{item.Name}')";
             cmd.Prepare();
             cmd.ExecuteNonQuery();
-            _connection.Dispose();
-        }
-
-        private static void DBConnectionOpen()
-        {
-            const string connectionString = "Data Source=Metrics.db";
-            _connection = new SQLiteConnection(connectionString);
-            _connection.Open();
         }
     }
 }

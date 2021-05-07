@@ -16,18 +16,19 @@ namespace MetricsAgent.Repositories
 
         public void Create(DotNetMetricsModel model)
         {
-            DBConnectionOpen();
+            using var _connection = new SQLiteConnection("Data Source=Metrics.db");
+            _connection.Open();
 
             using SQLiteCommand cmd = new(_connection);
             cmd.CommandText = $"INSERT INTO dotnetmetrics(value, time) VALUES({model.Value}, {model.DateTime.ToUnixTimeSeconds()})";
             cmd.Prepare();
             cmd.ExecuteNonQuery();
-            _connection.Dispose();
         }
 
         public IList<DotNetMetricsModel> GetAll()
         {
-            DBConnectionOpen();
+            using var _connection = new SQLiteConnection("Data Source=Metrics.db");
+            _connection.Open();
 
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = $"SELECT * FROM dotnetmetrics";
@@ -44,7 +45,6 @@ namespace MetricsAgent.Repositories
                         DateTime = DateTimeOffset.FromUnixTimeSeconds(reader.GetInt64(2))
                     });
                 }
-                _connection.Dispose();
 
                 return returnList;
             }
@@ -55,7 +55,8 @@ namespace MetricsAgent.Repositories
             long from = fromTime.ToUnixTimeSeconds();
             long to = toTime.ToUnixTimeSeconds();
 
-            DBConnectionOpen();
+            using var _connection = new SQLiteConnection("Data Source=Metrics.db");
+            _connection.Open();
 
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = $"SELECT * FROM dotnetmetrics WHERE time > {from} AND time < {to} AND id = {id}";
@@ -73,16 +74,8 @@ namespace MetricsAgent.Repositories
                     });
                 }
             }
-            _connection.Dispose();
 
             return returnList;
-        }
-
-        private static void DBConnectionOpen()
-        {
-            const string connectionString = "Data Source=Metrics.db";
-            _connection = new SQLiteConnection(connectionString);
-            _connection.Open();
         }
     }
 }

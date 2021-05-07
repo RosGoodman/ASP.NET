@@ -18,18 +18,19 @@ namespace MetricsManager.Repositories
 
         public void Create(CpuMetricsModel model)
         {
-            DBConnectionOpen(); 
-            ;
+            using var _connection = new SQLiteConnection("Data Source=Metrics.db");
+            _connection.Open();
+
             using SQLiteCommand cmd = new(_connection);
             cmd.CommandText = $"INSERT INTO cpumetrics(agentId, value, time) VALUES({model.AgentId}, {model.Value}, {model.DateTime.ToUnixTimeSeconds()})";
             cmd.Prepare();
             cmd.ExecuteNonQuery();
-            _connection.Dispose();
         }
 
         public IList<CpuMetricsModel> GetAll()
         {
-            DBConnectionOpen();
+            using var _connection = new SQLiteConnection("Data Source=Metrics.db");
+            _connection.Open();
 
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = "SELECT * FROM cpumetrics";
@@ -47,14 +48,14 @@ namespace MetricsManager.Repositories
                     });
                 }
             }
-            _connection.Dispose();
 
             return returnList;
         }
 
         public CpuMetricsModel GetById(int id)
         {
-            DBConnectionOpen();
+            using var _connection = new SQLiteConnection("Data Source=Metrics.db");
+            _connection.Open();
 
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = $"SELECT * FROM cpumetrics WHERE agentId = {id}";
@@ -63,21 +64,14 @@ namespace MetricsManager.Repositories
             {
                 if (reader.Read())
                 {
-                    CpuMetricsModel model = new CpuMetricsModel
+                    return new CpuMetricsModel
                     {
                         AgentId = reader.GetInt32(1),
                         Value = reader.GetInt32(2),
                         DateTime = DateTimeOffset.FromUnixTimeSeconds(reader.GetInt32(3))
                     };
-                    _connection.Dispose();
-
-                    return model;
                 }
-                else
-                {
-                    _connection.Dispose();
-                    return null;
-                }
+                else return null;
             }
         }
 
@@ -86,7 +80,8 @@ namespace MetricsManager.Repositories
             long from = fromTime.ToUnixTimeSeconds();
             long to = toTime.ToUnixTimeSeconds();
 
-            DBConnectionOpen();
+            using var _connection = new SQLiteConnection("Data Source=Metrics.db");
+            _connection.Open();
 
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = $"SELECT * FROM cpumetrics WHERE time > {from} AND time < {to} AND agentId = {id}";
@@ -104,16 +99,8 @@ namespace MetricsManager.Repositories
                     });
                 }
             }
-            _connection.Dispose();
 
             return returnList;
-        }
-
-        private static void DBConnectionOpen()
-        {
-            const string connectionString = "Data Source=Metrics.db";
-            _connection = new SQLiteConnection(connectionString);
-            _connection.Open();
         }
     }
 }
