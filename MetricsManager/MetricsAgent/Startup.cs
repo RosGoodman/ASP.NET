@@ -74,10 +74,6 @@ namespace MetricsAgent
             command.ExecuteNonQuery();
             command.CommandText = "INSERT INTO cpumetrics(value, time) VALUES(15, 1577998800)";     //1577998800 = 02.01.2020 21:00
             command.ExecuteNonQuery();
-            command.CommandText = "INSERT INTO cpumetrics(value, time) VALUES(100, 1578344400)";    //1578344400 = 06.01.2020 21:00
-            command.ExecuteNonQuery();
-            command.CommandText = "INSERT INTO cpumetrics(value, time) VALUES(100, 1578344400)";    //1578344400 = 06.01.2020 21:00
-            command.ExecuteNonQuery();
 
             command.CommandText = "INSERT INTO dotnetmetrics(value, time) VALUES(16, 1577998800)";
             command.ExecuteNonQuery();

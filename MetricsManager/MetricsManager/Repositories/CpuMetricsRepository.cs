@@ -1,6 +1,4 @@
-﻿using MetricsManager.Controllers;
-using MetricsManager.Models;
-using Microsoft.Extensions.Logging;
+﻿using MetricsManager.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;

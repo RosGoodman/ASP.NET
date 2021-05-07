@@ -7,17 +7,17 @@ using Xunit;
 
 namespace MetricsManagerTests
 {
-    public class DotNetMetricsControllerUnitTests
+    public class RamMetricsControllerUnitTests
     {
-        private DotNetMetricsController _controller;
-        private Mock<IDotNetMetricsRepository> _mock;
-        private Mock<ILogger<DotNetMetricsController>> _logger;
+        private RamMetricsController _controller;
+        private Mock<IRamMetricsRepository> _mock;
+        private Mock<ILogger<RamMetricsController>> _logger;
 
-        public DotNetMetricsControllerUnitTests()
+        public RamMetricsControllerUnitTests()
         {
-            _mock = new Mock<IDotNetMetricsRepository>();
-            _logger = new Mock<ILogger<DotNetMetricsController>>();
-            _controller = new DotNetMetricsController(_mock.Object, _logger.Object);
+            _mock = new Mock<IRamMetricsRepository>();
+            _logger = new Mock<ILogger<RamMetricsController>>();
+            _controller = new RamMetricsController(_mock.Object, _logger.Object);
         }
 
         [Fact]
