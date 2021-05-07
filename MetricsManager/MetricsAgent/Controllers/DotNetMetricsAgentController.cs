@@ -1,26 +1,39 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MetricsAgent.Repositories;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 
 namespace MetricsAgent.Controllers
 {
-    [Route("api/mtrics/dotnet")]
+    [Route("api/metrics/dotnet")]
     [ApiController]
     public class DotNetMetricsAgentController : ControllerBase
     {
         private readonly ILogger<DotNetMetricsAgentController> _logger;
+        private readonly IDotNetMetricsRepository _repository;
 
-        public DotNetMetricsAgentController(ILogger<DotNetMetricsAgentController> logger)
+        public DotNetMetricsAgentController(IDotNetMetricsRepository repository, ILogger<DotNetMetricsAgentController> logger)
         {
+            _repository = repository;
             _logger = logger;
-            logger.LogDebug(1, "NLog встроен в DotNetMetricsAgentController");
         }
 
-        [HttpGet("errors-count/id/{id}/from/{fromTime}/to/{toTime}")]
-        public IActionResult GetMetricsFromAgent([FromRoute] int id, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
+        [HttpGet("id/{id}/from/{fromTime}/to/{toTime}")]
+        public IActionResult GetMetricsFromTimeToTime([FromRoute] int id, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
-            _logger.LogInformation($"Запрос на получение метрик DotNet (agentId = {id}, fromTime = {fromTime}, toTime = {toTime})");
-            return Ok();
+            _logger.LogInformation($"Запрос на получение метрик DotNet (id = {id}, fromTime = {fromTime}, toTime = {toTime})");
+
+            var metrics = _repository.GetMetricsFromeTimeToTime(id, fromTime, toTime);
+            return Ok(metrics);
+        }
+
+        [HttpGet("all")]
+        public IActionResult GetMetricsById()
+        {
+            _logger.LogInformation($"Запрос на получение метрик DotNet");
+
+            var metrics = _repository.GetAll();
+            return Ok(metrics);
         }
     }
 }

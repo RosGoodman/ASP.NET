@@ -5,14 +5,14 @@ using System;
 
 namespace MetricsAgent.Controllers
 {
-    [Route("api/metrics/cpu")]
+    [Route("api/metrics/ram")]
     [ApiController]
-    public class CpuMetricsAgentController : ControllerBase
+    public class RamMetricsAgentController : ControllerBase
     {
-        private readonly ILogger<CpuMetricsAgentController> _logger;
-        private readonly ICpuMetricsRepository _repository;
+        private readonly ILogger<RamMetricsAgentController> _logger;
+        private readonly IRamMetricsRepository _repository;
 
-        public CpuMetricsAgentController(ICpuMetricsRepository repository, ILogger<CpuMetricsAgentController> logger)
+        public RamMetricsAgentController(IRamMetricsRepository repository, ILogger<RamMetricsAgentController> logger)
         {
             _repository = repository;
             _logger = logger;
@@ -21,7 +21,7 @@ namespace MetricsAgent.Controllers
         [HttpGet("id/{id}/from/{fromTime}/to/{toTime}")]
         public IActionResult GetMetricsFromTimeToTime([FromRoute] int id, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
-            _logger.LogInformation($"Запрос на получение метрик CPU (id = {id}, fromTime = {fromTime}, toTime = {toTime})");
+            _logger.LogInformation($"Запрос на получение метрик RAM (id = {id}, fromTime = {fromTime}, toTime = {toTime})");
 
             var metrics = _repository.GetMetricsFromeTimeToTime(id, fromTime, toTime);
             return Ok(metrics);
@@ -30,11 +30,9 @@ namespace MetricsAgent.Controllers
         [HttpGet("all")]
         public IActionResult GetMetricsById()
         {
-            _logger.LogInformation($"Запрос на получение метрик CPU");
-
+            _logger.LogInformation($"Запрос на получение метрик RAM");
             var metrics = _repository.GetAll();
             return Ok(metrics);
         }
     }
 }
-

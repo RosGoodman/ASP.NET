@@ -1,32 +1,77 @@
 ﻿using MetricsAgent.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 
 namespace MetricsAgent.Repositories
 {
-    public class NetworkMetricsRepository
+    public interface INetworkMetricsRepository : IRepository<NetworkMetricsModel>
     {
-        //тут пока пустые методы и заглушки
+        List<NetworkMetricsModel> GetMetricsFromeTimeToTime(int id, DateTimeOffset fromTime, DateTimeOffset toTime);
+    }
 
-        private List<NetworkMetricsModel> _networkMetrics;
-        public NetworkMetricsRepository()
+    public class NetworkMetricsRepository : INetworkMetricsRepository
+    {
+        private SQLiteConnection _connection;
+
+        public NetworkMetricsRepository(SQLiteConnection connection)
         {
-            _networkMetrics = new List<NetworkMetricsModel>();
+            _connection = connection;
         }
 
         public void Create(NetworkMetricsModel model)
         {
-            _networkMetrics.Add(model);
+            using SQLiteCommand cmd = new(_connection);
+            cmd.CommandText = $"INSERT INTO networkmetrics(value, time) VALUES({model.Value}, {model.DateTime.ToUnixTimeSeconds()})";
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
         }
 
-        public List<NetworkMetricsModel> GetMetricsFromeTimeToTime(DateTimeOffset fromTime, DateTimeOffset toTime)
+        public IList<NetworkMetricsModel> GetAll()
         {
-            return _networkMetrics;
+            using var cmd = new SQLiteCommand(_connection);
+            cmd.CommandText = $"SELECT * FROM networkmetrics";
+
+            var returnList = new List<NetworkMetricsModel>();
+
+            using (SQLiteDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    returnList.Add(new NetworkMetricsModel
+                    {
+                        Value = reader.GetInt32(1),
+                        DateTime = DateTimeOffset.FromUnixTimeSeconds(reader.GetInt64(2))
+                    });
+                }
+
+                return returnList;
+            }
         }
 
-        public void Delete(int id)
+        public List<NetworkMetricsModel> GetMetricsFromeTimeToTime(int id, DateTimeOffset fromTime, DateTimeOffset toTime)
         {
+            long from = fromTime.ToUnixTimeSeconds();
+            long to = toTime.ToUnixTimeSeconds();
 
+            using var cmd = new SQLiteCommand(_connection);
+            cmd.CommandText = $"SELECT * FROM networkmetrics WHERE time > {from} AND time < {to} AND id = {id}";
+            var returnList = new List<NetworkMetricsModel>();
+
+            using (SQLiteDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    returnList.Add(new NetworkMetricsModel
+                    {
+                        Id = reader.GetInt32(0),
+                        Value = reader.GetInt32(1),
+                        DateTime = DateTimeOffset.FromUnixTimeSeconds(reader.GetInt32(2))
+                    });
+                }
+            }
+
+            return returnList;
         }
     }
 }

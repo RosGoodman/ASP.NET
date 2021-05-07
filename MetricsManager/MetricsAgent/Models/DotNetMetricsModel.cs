@@ -6,7 +6,7 @@ namespace MetricsAgent.Models
     {
         public int Id { get; set; }
 
-        public string Value { get; set; }
+        public int Value { get; set; }
 
         public DateTimeOffset DateTime { get; set; }
     }

@@ -1,25 +1,39 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MetricsAgent.Repositories;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace MetricsAgent.Controllers
 {
-    [Route("api/mtrics/hdd")]
+    [Route("api/metrics/hdd")]
     [ApiController]
     public class HddMetricsAgentController : ControllerBase
     {
         private readonly ILogger<HddMetricsAgentController> _logger;
+        private readonly IHddMetricsRepository _repository;
 
-        public HddMetricsAgentController(ILogger<HddMetricsAgentController> logger)
+        public HddMetricsAgentController(IHddMetricsRepository repository, ILogger<HddMetricsAgentController> logger)
         {
+            _repository = repository;
             _logger = logger;
-            logger.LogDebug(1, "NLog встроен в HddMetricsAgentController");
         }
 
-        [HttpGet("left/id/{Id}")]
-        public IActionResult GetMetricsFromAgent([FromRoute] int id)
+        [HttpGet("id/{id}/from/{fromTime}/to/{toTime}")]
+        public IActionResult GetMetricsFromTimeToTime([FromRoute] int id, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
-            _logger.LogInformation($"Запрос на получение метрик Hdd (agentId = {id})");
-            return Ok();
+            _logger.LogInformation($"Запрос на получение метрик HDD (id = {id}, fromTime = {fromTime}, toTime = {toTime})");
+
+            var metrics = _repository.GetMetricsFromeTimeToTime(id, fromTime, toTime);
+            return Ok(metrics);
+        }
+
+        [HttpGet("all")]
+        public IActionResult GetMetricsById()
+        {
+            _logger.LogInformation($"Запрос на получение метрик HDD");
+
+            var metrics = _repository.GetAll();
+            return Ok(metrics);
         }
     }
 }
