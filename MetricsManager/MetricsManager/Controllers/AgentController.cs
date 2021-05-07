@@ -25,11 +25,13 @@ namespace MetricsManager.Controllers
         [HttpGet("all")]
         public IActionResult GetAllAgents()
         {
-            _logger.LogInformation($"Запрос на получение агентов");
+            _logger.LogInformation($"Запрос на получение метрик CPU");
 
+            // задаем конфигурацию для мапера. Первый обобщенный параметр -- тип объекта
+            // источника, второй -- тип объекта в который перетекут данные из источника
             var config = new MapperConfiguration(cfg => cfg.CreateMap<AgentModel, AgentsDto>());
             var m = config.CreateMapper();
-            IList<AgentModel> metrics = _repository.GetAll();
+            var metrics = _repository.GetAll();
 
             var response = new AllAgentsResponse()
             {
@@ -38,10 +40,29 @@ namespace MetricsManager.Controllers
 
             foreach (var metric in metrics)
             {
+                // добавляем объекты в ответ при помощи мапера
                 response.Metrics.Add(m.Map<AgentsDto>(metric));
             }
 
             return Ok(response);
+
+            //_logger.LogInformation($"Запрос на получение агентов");
+
+            //var config = new MapperConfiguration(cfg => cfg.CreateMap<AgentModel, AgentsDto>());
+            //var m = config.CreateMapper();
+            //IList<AgentModel> metrics = _repository.GetAll();
+
+            //var response = new AllAgentsResponse()
+            //{
+            //    Metrics = new List<AgentsDto>()
+            //};
+
+            //foreach (var metric in metrics)
+            //{
+            //    response.Metrics.Add(m.Map<AgentsDto>(metric));
+            //}
+
+            //return Ok(response);
         }
 
         [HttpGet("AgentId/{id}")]
