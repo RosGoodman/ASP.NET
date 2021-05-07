@@ -13,15 +13,11 @@ namespace MetricsManager.Repositories
     {
         private SQLiteConnection _connection;
 
-        public AgentsRepository(SQLiteConnection connection)
-        {
-            _connection = connection;
-        }
-
         /// <summary>Получить весь список агентов.</summary>
         /// <returns>Список агентов.</returns>
         public IList<AgentModel> GetAll()
         {
+            _connection = new SQLiteConnection();
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = "SELECT * FROM agents";
             var returnList = new List<AgentModel>();
@@ -36,6 +32,7 @@ namespace MetricsManager.Repositories
                     });
                 }
             }
+            _connection.Dispose();
 
             return returnList;
         }
@@ -45,19 +42,27 @@ namespace MetricsManager.Repositories
         /// <returns>Искомый агент или null.</returns>
         public AgentModel GetById(int id)
         {
+            _connection = new SQLiteConnection();
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = $"SELECT * FROM agents WHERE id = {id}";
             using (SQLiteDataReader reader = cmd.ExecuteReader())
             {
                 if (reader.Read())
                 {
-                    return new AgentModel
+                    AgentModel model = new AgentModel
                     {
                         AgentId = reader.GetInt32(0),
                         Name = reader.GetString(1)
                     };
+                    _connection.Dispose();
+
+                    return model;
                 }
-                else return null;
+                else
+                {
+                    _connection.Dispose();
+                    return null;
+                }
             }
         }
 
@@ -65,10 +70,12 @@ namespace MetricsManager.Repositories
         /// <param name="item">Модель добавляемого агента.</param>
         public void Create(AgentModel item)
         {
+            _connection = new SQLiteConnection();
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = $"INSERT INTO agents(name) VALUES('{item.Name}')";
             cmd.Prepare();
             cmd.ExecuteNonQuery();
+            _connection.Dispose();
         }
     }
 }

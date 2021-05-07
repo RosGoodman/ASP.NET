@@ -14,21 +14,19 @@ namespace MetricsManager.Repositories
     {
         private SQLiteConnection _connection;
 
-        public DotNetMetricsRepository(SQLiteConnection connection)
-        {
-            _connection = connection;
-        }
-
         public void Create(DotNetMetricsModel model)
         {
+            _connection = new SQLiteConnection();
             using SQLiteCommand cmd = new(_connection);
             cmd.CommandText = $"INSERT INTO dotnetmetrics(idagent, value, time) VALUES({model.AgentId}, {model.Value}, {model.DateTime.ToUnixTimeSeconds()})";
             cmd.Prepare();
             cmd.ExecuteNonQuery();
+            _connection.Dispose();
         }
 
         public IList<DotNetMetricsModel> GetAll()
         {
+            _connection = new SQLiteConnection();
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = "SELECT * FROM dotnetmetrics";
             var returnList = new List<DotNetMetricsModel>();
@@ -45,12 +43,14 @@ namespace MetricsManager.Repositories
                     });
                 }
             }
+            _connection.Dispose();
 
             return returnList;
         }
 
         public DotNetMetricsModel GetById(int id)
         {
+            _connection = new SQLiteConnection();
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = $"SELECT * FROM dotnetmetrics WHERE agentId = {id}";
 
@@ -58,14 +58,21 @@ namespace MetricsManager.Repositories
             {
                 if (reader.Read())
                 {
-                    return new DotNetMetricsModel
+                    DotNetMetricsModel model = new DotNetMetricsModel
                     {
                         AgentId = reader.GetInt32(1),
                         Value = reader.GetInt32(2),
                         DateTime = DateTimeOffset.FromUnixTimeSeconds(reader.GetInt32(3))
                     };
+                    _connection.Dispose();
+
+                    return model;
                 }
-                else return null;
+                else
+                {
+                    _connection.Dispose();
+                    return null;
+                }
             }
         }
 
@@ -74,6 +81,7 @@ namespace MetricsManager.Repositories
             long from = fromTime.ToUnixTimeSeconds();
             long to = toTime.ToUnixTimeSeconds();
 
+            _connection = new SQLiteConnection();
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = $"SELECT * FROM dotnetmetrics WHERE time > {from} AND time < {to} AND agentId = {id}";
             var returnList = new List<DotNetMetricsModel>();
@@ -90,6 +98,7 @@ namespace MetricsManager.Repositories
                     });
                 }
             }
+            _connection.Dispose();
 
             return returnList;
         }

@@ -14,21 +14,19 @@ namespace MetricsAgent.Repositories
     {
         private SQLiteConnection _connection;
 
-        public RamMetricsRepository(SQLiteConnection connection)
-        {
-            _connection = connection;
-        }
-
         public void Create(RamMetricsModel model)
         {
+            _connection = new SQLiteConnection();
             using SQLiteCommand cmd = new(_connection);
             cmd.CommandText = $"INSERT INTO rammetrics(value, time) VALUES({model.Value}, {model.DateTime.ToUnixTimeSeconds()})";
             cmd.Prepare();
             cmd.ExecuteNonQuery();
+            _connection.Dispose();
         }
 
         public IList<RamMetricsModel> GetAll()
         {
+            _connection = new SQLiteConnection();
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = $"SELECT * FROM rammetrics";
 
@@ -44,6 +42,7 @@ namespace MetricsAgent.Repositories
                         DateTime = DateTimeOffset.FromUnixTimeSeconds(reader.GetInt64(2))
                     });
                 }
+                _connection.Dispose();
 
                 return returnList;
             }
@@ -54,6 +53,7 @@ namespace MetricsAgent.Repositories
             long from = fromTime.ToUnixTimeSeconds();
             long to = toTime.ToUnixTimeSeconds();
 
+            _connection = new SQLiteConnection();
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = $"SELECT * FROM rammetrics WHERE time > {from} AND time < {to} AND id = {id}";
             var returnList = new List<RamMetricsModel>();
@@ -70,6 +70,7 @@ namespace MetricsAgent.Repositories
                     });
                 }
             }
+            _connection.Dispose();
 
             return returnList;
         }

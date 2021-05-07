@@ -16,21 +16,19 @@ namespace MetricsManager.Repositories
     {
         private SQLiteConnection _connection;
 
-        public CpuMetricsRepository(SQLiteConnection connection)
-        {
-            _connection = connection;
-        }
-
         public void Create(CpuMetricsModel model)
         {
+            _connection = new SQLiteConnection();
             using SQLiteCommand cmd = new(_connection);
             cmd.CommandText = $"INSERT INTO cpumetrics(agentId, value, time) VALUES({model.AgentId}, {model.Value}, {model.DateTime.ToUnixTimeSeconds()})";
             cmd.Prepare();
             cmd.ExecuteNonQuery();
+            _connection.Dispose();
         }
 
         public IList<CpuMetricsModel> GetAll()
         {
+            _connection = new SQLiteConnection();
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = "SELECT * FROM cpumetrics";
             var returnList = new List<CpuMetricsModel>();
@@ -47,12 +45,14 @@ namespace MetricsManager.Repositories
                     });
                 }
             }
+            _connection.Dispose();
 
             return returnList;
         }
 
         public CpuMetricsModel GetById(int id)
         {
+            _connection = new SQLiteConnection();
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = $"SELECT * FROM cpumetrics WHERE agentId = {id}";
 
@@ -60,14 +60,21 @@ namespace MetricsManager.Repositories
             {
                 if (reader.Read())
                 {
-                    return new CpuMetricsModel
+                    CpuMetricsModel model = new CpuMetricsModel
                     {
                         AgentId = reader.GetInt32(1),
                         Value = reader.GetInt32(2),
                         DateTime = DateTimeOffset.FromUnixTimeSeconds(reader.GetInt32(3))
                     };
+                    _connection.Dispose();
+
+                    return model;
                 }
-                else return null;
+                else
+                {
+                    _connection.Dispose();
+                    return null;
+                }
             }
         }
 
@@ -76,6 +83,7 @@ namespace MetricsManager.Repositories
             long from = fromTime.ToUnixTimeSeconds();
             long to = toTime.ToUnixTimeSeconds();
 
+            _connection = new SQLiteConnection();
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = $"SELECT * FROM cpumetrics WHERE time > {from} AND time < {to} AND agentId = {id}";
             var returnList = new List<CpuMetricsModel>();
@@ -92,6 +100,7 @@ namespace MetricsManager.Repositories
                     });
                 }
             }
+            _connection.Dispose();
 
             return returnList;
         }

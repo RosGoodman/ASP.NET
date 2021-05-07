@@ -14,21 +14,19 @@ namespace MetricsAgent.Repositories
     {
         private SQLiteConnection _connection;
 
-        public DotNetMetricsRepository(SQLiteConnection connection)
-        {
-            _connection = connection;
-        }
-
         public void Create(DotNetMetricsModel model)
         {
+            _connection = new SQLiteConnection();
             using SQLiteCommand cmd = new(_connection);
             cmd.CommandText = $"INSERT INTO dotnetmetrics(value, time) VALUES({model.Value}, {model.DateTime.ToUnixTimeSeconds()})";
             cmd.Prepare();
             cmd.ExecuteNonQuery();
+            _connection.Dispose();
         }
 
         public IList<DotNetMetricsModel> GetAll()
         {
+            _connection = new SQLiteConnection();
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = $"SELECT * FROM dotnetmetrics";
 
@@ -44,6 +42,7 @@ namespace MetricsAgent.Repositories
                         DateTime = DateTimeOffset.FromUnixTimeSeconds(reader.GetInt64(2))
                     });
                 }
+                _connection.Dispose();
 
                 return returnList;
             }
@@ -54,6 +53,7 @@ namespace MetricsAgent.Repositories
             long from = fromTime.ToUnixTimeSeconds();
             long to = toTime.ToUnixTimeSeconds();
 
+            _connection = new SQLiteConnection();
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = $"SELECT * FROM dotnetmetrics WHERE time > {from} AND time < {to} AND id = {id}";
             var returnList = new List<DotNetMetricsModel>();
@@ -70,6 +70,7 @@ namespace MetricsAgent.Repositories
                     });
                 }
             }
+            _connection.Dispose();
 
             return returnList;
         }

@@ -14,21 +14,19 @@ namespace MetricsAgent.Repositories
     {
         private SQLiteConnection _connection;
 
-        public CpuMetricsRepository(SQLiteConnection connection)
-        {
-            _connection = connection;
-        }
-
         public void Create(CpuMetricsModel model)
         {
+            _connection = new SQLiteConnection();
             using SQLiteCommand cmd = new(_connection);
             cmd.CommandText = $"INSERT INTO cpumetrics(value, time) VALUES({model.Value}, {model.DateTime.ToUnixTimeSeconds()})";
             cmd.Prepare();
             cmd.ExecuteNonQuery();
+            _connection.Dispose();
         }
 
         public IList<CpuMetricsModel> GetAll()
         {
+            _connection = new SQLiteConnection();
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = $"SELECT * FROM cpumetrics";
 
@@ -44,6 +42,7 @@ namespace MetricsAgent.Repositories
                         DateTime = DateTimeOffset.FromUnixTimeSeconds(reader.GetInt64(2))
                     });
                 }
+                _connection.Dispose();
 
                 return returnList;
             }
@@ -54,6 +53,7 @@ namespace MetricsAgent.Repositories
             long from = fromTime.ToUnixTimeSeconds();
             long to = toTime.ToUnixTimeSeconds();
 
+            _connection = new SQLiteConnection();
             using var cmd = new SQLiteCommand(_connection);
             cmd.CommandText = $"SELECT * FROM cpumetrics WHERE time > {from} AND time < {to} AND id = {id}";
             var returnList = new List<CpuMetricsModel>();
@@ -70,6 +70,7 @@ namespace MetricsAgent.Repositories
                     });
                 }
             }
+            _connection.Dispose();
 
             return returnList;
         }
