@@ -44,9 +44,10 @@ namespace MetricsAgent.Repositories
         public List<CpuMetricsModel> GetMetricsFromeTimeToTime(int id, DateTimeOffset fromTime, DateTimeOffset toTime)
         {
             using var connection = new SQLiteConnection(ConnectionString);
-            return connection.Query<CpuMetricsModel>($"SELECT id, time, value From cpumetrics WHERE time > @fromTime AND time < @toTime",
+            return connection.Query<CpuMetricsModel>($"SELECT id, time, value From cpumetrics WHERE time > @fromTime AND time < @toTime AND id = @id",
                     new
                     {
+                        id = id,
                         fromTime = fromTime.ToUnixTimeSeconds(),
                         toTime = toTime.ToUnixTimeSeconds()
                     }).ToList();
