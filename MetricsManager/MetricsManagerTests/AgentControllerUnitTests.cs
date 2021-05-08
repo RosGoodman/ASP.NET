@@ -20,19 +20,19 @@ namespace MetricsManagerTests
             
         }
 
-        //[Fact]
-        //public void GetMetrics_ShouldCall_GetAll_From_Repository()
-        //{
-        //    //Arrange
-        //    _mock.Setup(repository => repository.GetAll()).Verifiable();
-        //    _controller = new AgentController(_mock.Object, _logger.Object);
+        [Fact]
+        public void GetMetrics_ShouldCall_GetAll_From_Repository()
+        {
+            //Arrange
+            _mock.Setup(repository => repository.GetAll()).Verifiable();
+            _controller = new AgentController(_mock.Object, _logger.Object);
 
-        //    //Act
-        //    var result = _controller.GetAllAgents();
+            //Act
+            var result = _controller.GetAllAgents();
 
-        //    //Assert
-        //    _mock.Verify(repository => repository.GetAll(), Times.AtMostOnce());
-        //}
+            //Assert
+            _mock.Verify(repository => repository.GetAll(), Times.AtMostOnce());
+        }
 
         [Fact]
         public void GetAgentById_ShouldCall_GetById_From_Repository()
@@ -49,22 +49,22 @@ namespace MetricsManagerTests
             _mock.Verify(repository => repository.GetById(id), Times.AtMostOnce());
         }
 
-        //[Fact]
-        //public void CreateAgent_ShouldCall_Create_From_Repository()
-        //{
-        //    //Arrange
-        //    string name = "agent";
-        //    AgentModel agent = new AgentModel();
-        //    agent.Name = name;
+        [Fact]
+        public void CreateAgent_ShouldCall_Create_From_Repository()
+        {
+            //Arrange
+            string name = "agent";
+            AgentModel agent = new AgentModel();
+            agent.Name = name;
 
-        //    _mock.Setup(repository => repository.Create(agent)).Verifiable();
-        //    _controller = new AgentController(_mock.Object, _logger.Object);
+            _mock.Setup(repository => repository.Create(agent)).Verifiable();
+            _controller = new AgentController(_mock.Object, _logger.Object);
 
-        //    //Act
-        //    _controller.CreateAgent(name);
+            //Act
+            _controller.CreateAgent(name);
 
-        //    //Assert
-        //    _mock.Verify(repository => repository.Create(agent), Times.AtMostOnce());
-        //}
+            //Assert
+            _mock.Verify(repository => repository.Create(agent), Times.AtMostOnce());
+        }
     }
 }

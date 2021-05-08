@@ -32,51 +32,22 @@ namespace MetricsAgentTests
             //Assert
             _mock.Verify(repository => repository.GetAll(), Times.AtMostOnce());
         }
-        //[Fact]
-        //public void GetMetrics_ShouldCall_GetAll_From_Repository()
-        //{
-        //    //Arrange
-        //    _mock.Setup(repository => repository.GetAll()).Verifiable();
 
-        //    //Act
-        //    var result = _controller.GetMetrics();
+        [Fact]
+        public void GetMetricsFromTimeToTime_ShouldCall_GetMetricsFromeTimeToTime_From_Repository()     //необходимо ли сокращать наименование данного теста?
+        {
+            //Arrange
+            var fromTime = DateTimeOffset.FromUnixTimeSeconds(1575598800);
+            var toTime = DateTimeOffset.FromUnixTimeSeconds(1576498800);
+            int id = 1;
+            _mock.Setup(repository => repository.GetMetricsFromeTimeToTime(id, fromTime, toTime)).Verifiable();
 
-        //    //Assert
-        //    _mock.Verify(repository => repository.GetAll(), Times.AtMostOnce());
-        //}
-
-        //[Fact]
-        //public void GetMetricsFromTimeToTime_ShouldCall_GetMetricsFromeTimeToTime_From_Repository()     //необходимо ли сокращать наименование данного теста?
-        //{
-        //    //Arrange
-        //    var fromTime = DateTimeOffset.FromUnixTimeSeconds(1575598800);
-        //    var toTime = DateTimeOffset.FromUnixTimeSeconds(1576498800);
-        //    int id = 1;
-        //    _mock.Setup(repository => repository.GetMetricsFromeTimeToTime(id, fromTime, toTime)).Verifiable();
-
-        //    //Act
-        //    var result = _controller.GetMetricsFromTimeToTime(id, fromTime, toTime);
-
-        //    //Assert
-        //    _mock.Verify(repository => repository.GetMetricsFromeTimeToTime(id, fromTime, toTime), Times.AtMostOnce());
-        //}
-
-        //[Fact]
-        //public void GetMetricsAll_ShouldCall_GetAll_From_Repository()
-        //{
-        //    //Arrange
-        //    _mock.Setup(repository => repository.GetAll()).Verifiable();
-
-        //    //Act
-        //    var result = _controller.GetMetrics();
-
-        //    //Assert
-        //    _mock.Verify(repository => repository.GetAll(), Times.AtMostOnce());
-        //}
+            //Act
+            var result = _controller.GetMetricsFromTimeToTime(id, fromTime, toTime);
 
             //Assert
-            //_mock.Verify(repository => repository.GetMetricsFromeTimeToTime(id, fromTime, toTime), Times.AtMostOnce());
-        //}
+            _mock.Verify(repository => repository.GetMetricsFromeTimeToTime(id, fromTime, toTime), Times.AtMostOnce());
+        }
 
         [Fact]
         public void GetMetricsAll_ShouldCall_GetAll_From_Repository()
@@ -106,21 +77,5 @@ namespace MetricsAgentTests
             //Assert
             _mock.Verify(repository => repository.GetMetricsFromeTimeToTime(id, fromTime, toTime), Times.AtMostOnce());
         }
-
-        //[Fact]
-        //public void GetMetricsFromAgent_ShouldCall_GetMetricsFromeTimeToTimeFromAgent_From_Repository()
-        //{
-        //    //Arrange
-        //    var fromTime = DateTimeOffset.FromUnixTimeSeconds(1575598800);
-        //    var toTime = DateTimeOffset.FromUnixTimeSeconds(1576498800);
-        //    int id = 1;
-        //    _mock.Setup(repository => repository.GetMetricsFromeTimeToTime(id, fromTime, toTime)).Verifiable();
-
-        //    //Act
-        //    var result = _controller.GetMetricsFromTimeToTime(id, fromTime, toTime);
-
-        //    //Assert
-        //    _mock.Verify(repository => repository.GetMetricsFromeTimeToTime(id, fromTime, toTime), Times.AtMostOnce());
-        //}
     }
 }
