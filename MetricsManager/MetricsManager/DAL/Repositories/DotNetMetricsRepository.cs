@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using MetricsManager.DAL;
 using MetricsManager.Models;
 using System;
 using System.Collections.Generic;
@@ -16,14 +17,19 @@ namespace MetricsManager.Repositories
     {
         private const string ConnectionString = "Data Source=Metrics.db";
 
+        public DotNetMetricsRepository()
+        {
+            SqlMapper.AddTypeHandler(new DateTimeOffsetHandler());
+        }
+
         public void Create(DotNetMetricsModel model)
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                connection.Execute("INSERT INTO dotnetmetrics(agentId, value, time) VALUES(@agentId, @value, @time)",
+                connection.Execute("INSERT INTO dotnetmetrics(Id, value, time) VALUES(@Id, @value, @time)",
                     new
                     {
-                        agentId = model.AgentId,
+                        Id = model.Id,
                         value = model.Value,
                         time = model.Time
                     });

@@ -16,6 +16,12 @@ namespace MetricsManager.Controllers
         private readonly ILogger<RamMetricsController> _logger;
         private readonly IRamMetricsRepository _repository;
 
+        public RamMetricsController(IRamMetricsRepository repository, ILogger<RamMetricsController> logger)
+        {
+            _repository = repository;
+            _logger = logger;
+        }
+
         [HttpGet("agentId/{id}/from/{fromTime}/to/{toTime}")]
         public IActionResult GetMetricsFromAgent([FromRoute] int id, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
@@ -43,7 +49,7 @@ namespace MetricsManager.Controllers
         {
             _logger.LogInformation($"Запрос на получение метрик RAM (id = {id}).");
 
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<CpuMetricsModel, RamMetricsDto>());
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<RamMetricsModel, RamMetricsDto>());
             var m = config.CreateMapper();
             RamMetricsModel metrics = _repository.GetById(id);
 

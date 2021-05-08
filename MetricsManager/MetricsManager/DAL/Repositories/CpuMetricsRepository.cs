@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using MetricsManager.DAL;
 using MetricsManager.Models;
 using System;
 using System.Collections.Generic;
@@ -18,14 +19,19 @@ namespace MetricsManager.Repositories
     {
         private const string ConnectionString = "Data Source=Metrics.db";
 
+        public CpuMetricsRepository()
+        {
+            SqlMapper.AddTypeHandler(new DateTimeOffsetHandler());
+        }
+
         public void Create(CpuMetricsModel model)
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                connection.Execute("INSERT INTO cpumetrics(agentId, value, time) VALUES(@agentId, @value, @time)",
+                connection.Execute("INSERT INTO cpumetrics(agentId, value, time) VALUES(@Id, @value, @time)",
                     new
                     {
-                        agentId = model.AgentId,
+                        agentId = model.Id,
                         value = model.Value,
                         time = model.Time
                     });
