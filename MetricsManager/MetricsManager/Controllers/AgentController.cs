@@ -45,24 +45,6 @@ namespace MetricsManager.Controllers
             }
 
             return Ok(response);
-
-            //_logger.LogInformation($"Запрос на получение агентов");
-
-            //var config = new MapperConfiguration(cfg => cfg.CreateMap<AgentModel, AgentsDto>());
-            //var m = config.CreateMapper();
-            //IList<AgentModel> metrics = _repository.GetAll();
-
-            //var response = new AllAgentsResponse()
-            //{
-            //    Metrics = new List<AgentsDto>()
-            //};
-
-            //foreach (var metric in metrics)
-            //{
-            //    response.Metrics.Add(m.Map<AgentsDto>(metric));
-            //}
-
-            //return Ok(response);
         }
 
         [HttpGet("AgentId/{id}")]

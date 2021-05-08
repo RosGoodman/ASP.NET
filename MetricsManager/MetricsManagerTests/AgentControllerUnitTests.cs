@@ -20,21 +20,12 @@ namespace MetricsManagerTests
             
         }
 
-<<<<<<< HEAD
         //[Fact]
         //public void GetMetrics_ShouldCall_GetAll_From_Repository()
         //{
         //    //Arrange
         //    _mock.Setup(repository => repository.GetAll()).Verifiable();
         //    _controller = new AgentController(_mock.Object, _logger.Object);
-=======
-        [Fact]
-        public void GetMetrics_ShouldCall_GetAll_From_Repository()
-        {
-            //Arrange
-            _mock.Setup(repository => repository.GetAll()).Verifiable();
-            _controller = new AgentController(_mock.Object, _logger.Object);
->>>>>>> 651a3c5ea7ac386800b97ebecbb9ce6ec18a5310
 
         //    //Act
         //    var result = _controller.GetAllAgents();

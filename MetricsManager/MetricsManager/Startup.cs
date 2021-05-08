@@ -46,57 +46,42 @@ namespace MetricsManager
 
                 command.CommandText = "DROP TABLE IF EXISTS cpumetrics";
                 command.ExecuteNonQuery();
-<<<<<<< HEAD
                 command.CommandText = @"CREATE TABLE cpumetrics(id INTEGER PRIMARY KEY, AgentId INT, value INT, time INT,
                     FOREIGN KEY(AgentId) REFERENCES agents(id))";
-=======
                 command.CommandText = @"CREATE TABLE cpumetrics(id INTEGER PRIMARY KEY, Id INT, value INT, time INT,
                     FOREIGN KEY(Id) REFERENCES agents(id))";
->>>>>>> 651a3c5ea7ac386800b97ebecbb9ce6ec18a5310
                 command.ExecuteNonQuery();
 
                 command.CommandText = "DROP TABLE IF EXISTS dotnetmetrics";
                 command.ExecuteNonQuery();
-<<<<<<< HEAD
                 command.CommandText = @"CREATE TABLE dotnetmetrics(id INTEGER PRIMARY KEY, AgentId INT, value INT, time INT,
                     FOREIGN KEY(AgentId) REFERENCES agents(id))";
-=======
                 command.CommandText = @"CREATE TABLE dotnetmetrics(id INTEGER PRIMARY KEY, Id INT, value INT, time INT,
                     FOREIGN KEY(Id) REFERENCES agents(id))";
->>>>>>> 651a3c5ea7ac386800b97ebecbb9ce6ec18a5310
                 command.ExecuteNonQuery();
 
                 command.CommandText = "DROP TABLE IF EXISTS hddmetrics";
                 command.ExecuteNonQuery();
-<<<<<<< HEAD
                 command.CommandText = @"CREATE TABLE hddmetrics(id INTEGER PRIMARY KEY, AgentId INT, value INT, time INT,
                     FOREIGN KEY(AgentId) REFERENCES agents(id))";
-=======
                 command.CommandText = @"CREATE TABLE hddmetrics(id INTEGER PRIMARY KEY, Id INT, value INT, time INT,
                     FOREIGN KEY(Id) REFERENCES agents(id))";
->>>>>>> 651a3c5ea7ac386800b97ebecbb9ce6ec18a5310
                 command.ExecuteNonQuery();
 
                 command.CommandText = "DROP TABLE IF EXISTS networkmetrics";
                 command.ExecuteNonQuery();
-<<<<<<< HEAD
                 command.CommandText = @"CREATE TABLE networkmetrics(id INTEGER PRIMARY KEY, AgentId INT, value INT, time INT,
                     FOREIGN KEY(AgentId) REFERENCES agents(id))";
-=======
                 command.CommandText = @"CREATE TABLE networkmetrics(id INTEGER PRIMARY KEY, Id INT, value INT, time INT,
                     FOREIGN KEY(Id) REFERENCES agents(id))";
->>>>>>> 651a3c5ea7ac386800b97ebecbb9ce6ec18a5310
                 command.ExecuteNonQuery();
 
                 command.CommandText = "DROP TABLE IF EXISTS rammetrics";
                 command.ExecuteNonQuery();
-<<<<<<< HEAD
                 command.CommandText = @"CREATE TABLE rammetrics(id INTEGER PRIMARY KEY, AgentId INT, value INT, time INT,
                     FOREIGN KEY(AgentId) REFERENCES agents(id))";
-=======
                 command.CommandText = @"CREATE TABLE rammetrics(id INTEGER PRIMARY KEY, Id INT, value INT, time INT,
                     FOREIGN KEY(Id) REFERENCES agents(id))";
->>>>>>> 651a3c5ea7ac386800b97ebecbb9ce6ec18a5310
                 command.ExecuteNonQuery();
 
                 CreateData(connection); //данные для проверки
@@ -118,7 +103,6 @@ namespace MetricsManager
                 command.CommandText = "INSERT INTO agents(name) VALUES('agent2')";
                 command.ExecuteNonQuery();
 
-<<<<<<< HEAD
                 command.CommandText = "INSERT INTO cpumetrics(AgentId, value, time) VALUES(1, 15, 1577998800)";     //1577998800 = 02.01.2020 21:00
                 command.ExecuteNonQuery();
                 command.CommandText = "INSERT INTO cpumetrics(AgentId, value, time) VALUES(2, 100, 1578344400)";    //1578344400 = 06.01.2020 21:00
@@ -142,7 +126,7 @@ namespace MetricsManager
                 command.CommandText = "INSERT INTO rammetrics(AgentId, value, time) VALUES(1, 86543, 1577998800)";
                 command.ExecuteNonQuery();
                 command.CommandText = "INSERT INTO rammetrics(AgentId, value, time) VALUES(2, 9652165, 1578344400)";
-=======
+
                 command.CommandText = "INSERT INTO cpumetrics(Id, value, time) VALUES(1, 15, 1577998800)";     //1577998800 = 02.01.2020 21:00
                 command.ExecuteNonQuery();
                 command.CommandText = "INSERT INTO cpumetrics(Id, value, time) VALUES(2, 100, 1578344400)";    //1578344400 = 06.01.2020 21:00
@@ -166,7 +150,7 @@ namespace MetricsManager
                 command.CommandText = "INSERT INTO rammetrics(Id, value, time) VALUES(1, 86543, 1577998800)";
                 command.ExecuteNonQuery();
                 command.CommandText = "INSERT INTO rammetrics(Id, value, time) VALUES(2, 9652165, 1578344400)";
->>>>>>> 651a3c5ea7ac386800b97ebecbb9ce6ec18a5310
+
                 command.ExecuteNonQuery();
             }
         }

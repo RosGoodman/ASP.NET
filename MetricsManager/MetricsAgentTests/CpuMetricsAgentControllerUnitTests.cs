@@ -20,7 +20,6 @@ namespace MetricsAgentTests
             _controller = new CpuMetricsAgentController(_mock.Object, _logger.Object);
         }
 
-<<<<<<< HEAD
         [Fact]
         public void GetMetrics_ShouldCall_GetAll_From_Repository()
         {
@@ -33,7 +32,6 @@ namespace MetricsAgentTests
             //Assert
             _mock.Verify(repository => repository.GetAll(), Times.AtMostOnce());
         }
-=======
         //[Fact]
         //public void GetMetrics_ShouldCall_GetAll_From_Repository()
         //{
@@ -68,7 +66,6 @@ namespace MetricsAgentTests
         //{
         //    //Arrange
         //    _mock.Setup(repository => repository.GetAll()).Verifiable();
->>>>>>> 651a3c5ea7ac386800b97ebecbb9ce6ec18a5310
 
         //    //Act
         //    var result = _controller.GetMetrics();
@@ -77,10 +74,9 @@ namespace MetricsAgentTests
         //    _mock.Verify(repository => repository.GetAll(), Times.AtMostOnce());
         //}
 
-<<<<<<< HEAD
             //Assert
-            _mock.Verify(repository => repository.GetMetricsFromeTimeToTime(id, fromTime, toTime), Times.AtMostOnce());
-        }
+            //_mock.Verify(repository => repository.GetMetricsFromeTimeToTime(id, fromTime, toTime), Times.AtMostOnce());
+        //}
 
         [Fact]
         public void GetMetricsAll_ShouldCall_GetAll_From_Repository()
@@ -110,7 +106,7 @@ namespace MetricsAgentTests
             //Assert
             _mock.Verify(repository => repository.GetMetricsFromeTimeToTime(id, fromTime, toTime), Times.AtMostOnce());
         }
-=======
+
         //[Fact]
         //public void GetMetricsFromAgent_ShouldCall_GetMetricsFromeTimeToTimeFromAgent_From_Repository()
         //{
@@ -126,6 +122,5 @@ namespace MetricsAgentTests
         //    //Assert
         //    _mock.Verify(repository => repository.GetMetricsFromeTimeToTime(id, fromTime, toTime), Times.AtMostOnce());
         //}
->>>>>>> 651a3c5ea7ac386800b97ebecbb9ce6ec18a5310
     }
 }
