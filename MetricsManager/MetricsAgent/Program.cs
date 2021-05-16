@@ -35,11 +35,12 @@ namespace MetricsAgent
                 {
                     webBuilder.UseStartup<Startup>();
                 })
-                .ConfigureLogging(logging =>
+            .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders(); // создание провайдеров логирования
                     logging.SetMinimumLevel(LogLevel.Trace); // устанавливаем минимальный уровень логирования
-                }).UseNLog(); // добавляем библиотеку nlog
+                })
+            .UseNLog(); // добавляем библиотеку nlog
 
     }
 }

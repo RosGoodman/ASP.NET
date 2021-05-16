@@ -22,6 +22,12 @@ namespace MetricsAgent.Controllers
             _logger = logger;
         }
 
+        [HttpGet("greeting")]
+        public IActionResult GreetingMethod()
+        {
+            return Ok("Программа запущена!");
+        }
+
         [HttpGet("from/{fromTime}/to/{toTime}")]
         public IActionResult GetMetricsFromTimeToTime([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
