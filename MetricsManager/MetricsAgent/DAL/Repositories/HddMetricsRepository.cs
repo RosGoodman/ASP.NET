@@ -10,7 +10,7 @@ namespace MetricsAgent.Repositories
 {
     public interface IHddMetricsRepository : IRepository<HddMetricsModel>
     {
-        List<HddMetricsModel> GetMetricsFromeTimeToTime(int id, DateTimeOffset fromTime, DateTimeOffset toTime);
+        List<HddMetricsModel> GetMetricsFromeTimeToTime(DateTimeOffset fromTime, DateTimeOffset toTime);
     }
 
     public class HddMetricsRepository : IHddMetricsRepository
@@ -20,12 +20,6 @@ namespace MetricsAgent.Repositories
         public HddMetricsRepository()
         {
             SqlMapper.AddTypeHandler(new DateTimeOffsetHandler());
-        }
-
-        public IList<HddMetricsModel> GetAll()
-        {
-            using var connection = new SQLiteConnection(ConnectionString);
-            return connection.Query<HddMetricsModel>("SELECT * FROM hddmetrics").ToList();
         }
 
         public void Create(HddMetricsModel model)
@@ -41,13 +35,13 @@ namespace MetricsAgent.Repositories
             }
         }
 
-        public List<HddMetricsModel> GetMetricsFromeTimeToTime(int id, DateTimeOffset fromTime, DateTimeOffset toTime)
+        public List<HddMetricsModel> GetMetricsFromeTimeToTime(DateTimeOffset fromTime, DateTimeOffset toTime)
         {
             long from = fromTime.ToUnixTimeSeconds();
             long to = toTime.ToUnixTimeSeconds();
 
             using var connection = new SQLiteConnection(ConnectionString);
-            return connection.Query<HddMetricsModel>($"SELECT id, time, value From hddmetrics WHERE time > @fromTime AND time < @toTime",
+            return connection.Query<HddMetricsModel>($"SELECT time, value From hddmetrics WHERE time >= @fromTime AND time <= @toTime",
                     new
                     {
                         fromTime = fromTime.ToUnixTimeSeconds(),

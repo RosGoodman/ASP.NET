@@ -10,7 +10,7 @@ namespace MetricsAgent.Repositories
 {
     public interface INetworkMetricsRepository : IRepository<NetworkMetricsModel>
     {
-        List<NetworkMetricsModel> GetMetricsFromeTimeToTime(int id, DateTimeOffset fromTime, DateTimeOffset toTime);
+        List<NetworkMetricsModel> GetMetricsFromeTimeToTime(DateTimeOffset fromTime, DateTimeOffset toTime);
     }
 
     public class NetworkMetricsRepository : INetworkMetricsRepository
@@ -20,12 +20,6 @@ namespace MetricsAgent.Repositories
         public NetworkMetricsRepository()
         {
             SqlMapper.AddTypeHandler(new DateTimeOffsetHandler());
-        }
-
-        public IList<NetworkMetricsModel> GetAll()
-        {
-            using var connection = new SQLiteConnection(ConnectionString);
-            return connection.Query<NetworkMetricsModel>("SELECT * FROM networkmetrics").ToList();
         }
 
         public void Create(NetworkMetricsModel model)
@@ -41,10 +35,10 @@ namespace MetricsAgent.Repositories
             }
         }
 
-        public List<NetworkMetricsModel> GetMetricsFromeTimeToTime(int id, DateTimeOffset fromTime, DateTimeOffset toTime)
+        public List<NetworkMetricsModel> GetMetricsFromeTimeToTime(DateTimeOffset fromTime, DateTimeOffset toTime)
         {
             using var connection = new SQLiteConnection(ConnectionString);
-            return connection.Query<NetworkMetricsModel>($"SELECT id, time, value From networkmetrics WHERE time > @fromTime AND time < @toTime",
+            return connection.Query<NetworkMetricsModel>($"SELECT time, value From networkmetrics WHERE time >= @fromTime AND time <= @toTime",
                     new
                     {
                         fromTime = fromTime.ToUnixTimeSeconds(),

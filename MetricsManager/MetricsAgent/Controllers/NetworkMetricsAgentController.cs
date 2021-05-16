@@ -22,14 +22,14 @@ namespace MetricsAgent.Controllers
             _logger = logger;
         }
 
-        [HttpGet("id/{id}/from/{fromTime}/to/{toTime}")]
-        public IActionResult GetMetricsFromTimeToTime([FromRoute] int id, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
+        [HttpGet("from/{fromTime}/to/{toTime}")]
+        public IActionResult GetMetricsFromTimeToTime([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
-            _logger.LogInformation($"Запрос на получение метрик Network (id = {id}, fromTime = {fromTime}, toTime = {toTime})");
+            _logger.LogInformation($"Запрос на получение метрик Network (fromTime = {fromTime}, toTime = {toTime})");
 
             var config = new MapperConfiguration(cfg => cfg.CreateMap<NetworkMetricsModel, NetworkMetricsDto>());
             var m = config.CreateMapper();
-            IList<NetworkMetricsModel> metrics = _repository.GetMetricsFromeTimeToTime(id, fromTime, toTime);
+            IList<NetworkMetricsModel> metrics = _repository.GetMetricsFromeTimeToTime(fromTime, toTime);
 
             var response = new AllNetworkMetricsResponse()
             {
@@ -42,29 +42,6 @@ namespace MetricsAgent.Controllers
             }
 
             return Ok(metrics);
-        }
-
-        [HttpGet("all")]
-        public IActionResult GetMetrics()
-        {
-            _logger.LogInformation($"Запрос на получение метрик Network");
-
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<NetworkMetricsModel, NetworkMetricsDto>());
-            var m = config.CreateMapper();
-            IList<NetworkMetricsModel> metrics = _repository.GetAll();
-
-            var response = new AllNetworkMetricsResponse()
-            {
-                Metrics = new List<NetworkMetricsDto>()
-            };
-
-            foreach (var metric in metrics)
-            {
-                // добавляем объекты в ответ при помощи мапера
-                response.Metrics.Add(m.Map<NetworkMetricsDto>(metric));
-            }
-
-            return Ok(response);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace MetricsAgent.Repositories
 {
     public interface IRamMetricsRepository : IRepository<RamMetricsModel>
     {
-        List<RamMetricsModel> GetMetricsFromeTimeToTime(int id, DateTimeOffset fromTime, DateTimeOffset toTime);
+        List<RamMetricsModel> GetMetricsFromeTimeToTime(DateTimeOffset fromTime, DateTimeOffset toTime);
     }
 
     public class RamMetricsRepository : IRamMetricsRepository
@@ -20,12 +20,6 @@ namespace MetricsAgent.Repositories
         public RamMetricsRepository()
         {
             SqlMapper.AddTypeHandler(new DateTimeOffsetHandler());
-        }
-
-        public IList<RamMetricsModel> GetAll()
-        {
-            using var connection = new SQLiteConnection(ConnectionString);
-            return connection.Query<RamMetricsModel>("SELECT * FROM rammetrics").ToList();
         }
 
         public void Create(RamMetricsModel model)
@@ -41,10 +35,10 @@ namespace MetricsAgent.Repositories
             }
         }
 
-        public List<RamMetricsModel> GetMetricsFromeTimeToTime(int id, DateTimeOffset fromTime, DateTimeOffset toTime)
+        public List<RamMetricsModel> GetMetricsFromeTimeToTime(DateTimeOffset fromTime, DateTimeOffset toTime)
         {
             using var connection = new SQLiteConnection(ConnectionString);
-            return connection.Query<RamMetricsModel>($"SELECT id, time, value From rammetrics WHERE time > @fromTime AND time < @toTime",
+            return connection.Query<RamMetricsModel>($"SELECT time, value From rammetrics WHERE time >= @fromTime AND time <= @toTime",
                     new
                     {
                         fromTime = fromTime.ToUnixTimeSeconds(),

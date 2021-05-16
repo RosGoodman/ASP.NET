@@ -10,7 +10,7 @@ namespace MetricsAgent.Repositories
 {
     public interface ICpuMetricsRepository : IRepository<CpuMetricsModel>
     {
-        List<CpuMetricsModel> GetMetricsFromeTimeToTime(int id, DateTimeOffset fromTime, DateTimeOffset toTime);
+        List<CpuMetricsModel> GetMetricsFromeTimeToTime(DateTimeOffset fromTime, DateTimeOffset toTime);
     }
 
     public class CpuMetricsRepository : ICpuMetricsRepository
@@ -20,12 +20,6 @@ namespace MetricsAgent.Repositories
         public CpuMetricsRepository()
         {
             SqlMapper.AddTypeHandler(new DateTimeOffsetHandler());
-        }
-
-        public IList<CpuMetricsModel> GetAll()
-        {
-            using var connection = new SQLiteConnection(ConnectionString);
-            return connection.Query<CpuMetricsModel>("SELECT * FROM cpumetrics").ToList();
         }
 
         public void Create(CpuMetricsModel model)
@@ -41,13 +35,12 @@ namespace MetricsAgent.Repositories
             }
         }
 
-        public List<CpuMetricsModel> GetMetricsFromeTimeToTime(int id, DateTimeOffset fromTime, DateTimeOffset toTime)
+        public List<CpuMetricsModel> GetMetricsFromeTimeToTime(DateTimeOffset fromTime, DateTimeOffset toTime)
         {
             using var connection = new SQLiteConnection(ConnectionString);
-            return connection.Query<CpuMetricsModel>($"SELECT id, time, value From cpumetrics WHERE time > @fromTime AND time < @toTime AND id = @id",
+            return connection.Query<CpuMetricsModel>($"SELECT time, value From cpumetrics WHERE time >= @fromTime AND time <= @toTime",
                     new
                     {
-                        id = id,
                         fromTime = fromTime.ToUnixTimeSeconds(),
                         toTime = toTime.ToUnixTimeSeconds()
                     }).ToList();
