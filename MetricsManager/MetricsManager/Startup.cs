@@ -1,3 +1,4 @@
+using FluentMigrator.Runner;
 using MetricsManager.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,65 +29,76 @@ namespace MetricsManager
             const string connectionString = "Data Source=Metrics.db";
             var connection = new SQLiteConnection(connectionString);
             connection.Open();
-            PrepareSchema(connection);
-            services.AddSingleton(connection);
+            //PrepareSchema(connection);
+            //services.AddSingleton(connection);
+
+            services.AddFluentMigratorCore().ConfigureRunner(builder => builder
+                //добавляем поддержку SQLite
+                .AddSQLite()
+                //устанавливаем сроку подключения
+                .WithGlobalConnectionString(connectionString)
+                //подсказываем где искать классы с миграциями
+                .ScanIn(typeof(Startup).Assembly).For.Migrations())
+                .AddLogging(lb => lb.AddFluentMigratorConsole());
+
+            CreateData(connection); //данные для проверки
         }
 
-        private void PrepareSchema(SQLiteConnection connection)
-        {
-            using(var command = new SQLiteCommand(connection))
-            {
-                // задаем новый текст команды для выполнения
-                // удаляем таблицу с метриками если она существует в базе данных
-                command.CommandText = "DROP TABLE IF EXISTS agents";
-                // отправляем запрос в базу данных
-                command.ExecuteNonQuery();
-                command.CommandText = @"CREATE TABLE agents(id INTEGER PRIMARY KEY, name STRING)";
-                command.ExecuteNonQuery();
+        //private void PrepareSchema(SQLiteConnection connection)
+        //{
+        //    using(var command = new SQLiteCommand(connection))
+        //    {
+        //        // задаем новый текст команды для выполнения
+        //        // удаляем таблицу с метриками если она существует в базе данных
+        //        command.CommandText = "DROP TABLE IF EXISTS agents";
+        //        // отправляем запрос в базу данных
+        //        command.ExecuteNonQuery();
+        //        command.CommandText = @"CREATE TABLE agents(id INTEGER PRIMARY KEY, name STRING)";
+        //        command.ExecuteNonQuery();
 
-                command.CommandText = "DROP TABLE IF EXISTS cpumetrics";
-                command.ExecuteNonQuery();
-                command.CommandText = @"CREATE TABLE cpumetrics(id INTEGER PRIMARY KEY, AgentId INT, value INT, time INT,
-                    FOREIGN KEY(AgentId) REFERENCES agents(id))";
-                command.CommandText = @"CREATE TABLE cpumetrics(id INTEGER PRIMARY KEY, Id INT, value INT, time INT,
-                    FOREIGN KEY(Id) REFERENCES agents(id))";
-                command.ExecuteNonQuery();
+        //        command.CommandText = "DROP TABLE IF EXISTS cpumetrics";
+        //        command.ExecuteNonQuery();
+        //        command.CommandText = @"CREATE TABLE cpumetrics(id INTEGER PRIMARY KEY, AgentId INT, value INT, time INT,
+        //            FOREIGN KEY(AgentId) REFERENCES agents(id))";
+        //        command.CommandText = @"CREATE TABLE cpumetrics(id INTEGER PRIMARY KEY, Id INT, value INT, time INT,
+        //            FOREIGN KEY(Id) REFERENCES agents(id))";
+        //        command.ExecuteNonQuery();
 
-                command.CommandText = "DROP TABLE IF EXISTS dotnetmetrics";
-                command.ExecuteNonQuery();
-                command.CommandText = @"CREATE TABLE dotnetmetrics(id INTEGER PRIMARY KEY, AgentId INT, value INT, time INT,
-                    FOREIGN KEY(AgentId) REFERENCES agents(id))";
-                command.CommandText = @"CREATE TABLE dotnetmetrics(id INTEGER PRIMARY KEY, Id INT, value INT, time INT,
-                    FOREIGN KEY(Id) REFERENCES agents(id))";
-                command.ExecuteNonQuery();
+        //        command.CommandText = "DROP TABLE IF EXISTS dotnetmetrics";
+        //        command.ExecuteNonQuery();
+        //        command.CommandText = @"CREATE TABLE dotnetmetrics(id INTEGER PRIMARY KEY, AgentId INT, value INT, time INT,
+        //            FOREIGN KEY(AgentId) REFERENCES agents(id))";
+        //        command.CommandText = @"CREATE TABLE dotnetmetrics(id INTEGER PRIMARY KEY, Id INT, value INT, time INT,
+        //            FOREIGN KEY(Id) REFERENCES agents(id))";
+        //        command.ExecuteNonQuery();
 
-                command.CommandText = "DROP TABLE IF EXISTS hddmetrics";
-                command.ExecuteNonQuery();
-                command.CommandText = @"CREATE TABLE hddmetrics(id INTEGER PRIMARY KEY, AgentId INT, value INT, time INT,
-                    FOREIGN KEY(AgentId) REFERENCES agents(id))";
-                command.CommandText = @"CREATE TABLE hddmetrics(id INTEGER PRIMARY KEY, Id INT, value INT, time INT,
-                    FOREIGN KEY(Id) REFERENCES agents(id))";
-                command.ExecuteNonQuery();
+        //        command.CommandText = "DROP TABLE IF EXISTS hddmetrics";
+        //        command.ExecuteNonQuery();
+        //        command.CommandText = @"CREATE TABLE hddmetrics(id INTEGER PRIMARY KEY, AgentId INT, value INT, time INT,
+        //            FOREIGN KEY(AgentId) REFERENCES agents(id))";
+        //        command.CommandText = @"CREATE TABLE hddmetrics(id INTEGER PRIMARY KEY, Id INT, value INT, time INT,
+        //            FOREIGN KEY(Id) REFERENCES agents(id))";
+        //        command.ExecuteNonQuery();
 
-                command.CommandText = "DROP TABLE IF EXISTS networkmetrics";
-                command.ExecuteNonQuery();
-                command.CommandText = @"CREATE TABLE networkmetrics(id INTEGER PRIMARY KEY, AgentId INT, value INT, time INT,
-                    FOREIGN KEY(AgentId) REFERENCES agents(id))";
-                command.CommandText = @"CREATE TABLE networkmetrics(id INTEGER PRIMARY KEY, Id INT, value INT, time INT,
-                    FOREIGN KEY(Id) REFERENCES agents(id))";
-                command.ExecuteNonQuery();
+        //        command.CommandText = "DROP TABLE IF EXISTS networkmetrics";
+        //        command.ExecuteNonQuery();
+        //        command.CommandText = @"CREATE TABLE networkmetrics(id INTEGER PRIMARY KEY, AgentId INT, value INT, time INT,
+        //            FOREIGN KEY(AgentId) REFERENCES agents(id))";
+        //        command.CommandText = @"CREATE TABLE networkmetrics(id INTEGER PRIMARY KEY, Id INT, value INT, time INT,
+        //            FOREIGN KEY(Id) REFERENCES agents(id))";
+        //        command.ExecuteNonQuery();
 
-                command.CommandText = "DROP TABLE IF EXISTS rammetrics";
-                command.ExecuteNonQuery();
-                command.CommandText = @"CREATE TABLE rammetrics(id INTEGER PRIMARY KEY, AgentId INT, value INT, time INT,
-                    FOREIGN KEY(AgentId) REFERENCES agents(id))";
-                command.CommandText = @"CREATE TABLE rammetrics(id INTEGER PRIMARY KEY, Id INT, value INT, time INT,
-                    FOREIGN KEY(Id) REFERENCES agents(id))";
-                command.ExecuteNonQuery();
+        //        command.CommandText = "DROP TABLE IF EXISTS rammetrics";
+        //        command.ExecuteNonQuery();
+        //        command.CommandText = @"CREATE TABLE rammetrics(id INTEGER PRIMARY KEY, AgentId INT, value INT, time INT,
+        //            FOREIGN KEY(AgentId) REFERENCES agents(id))";
+        //        command.CommandText = @"CREATE TABLE rammetrics(id INTEGER PRIMARY KEY, Id INT, value INT, time INT,
+        //            FOREIGN KEY(Id) REFERENCES agents(id))";
+        //        command.ExecuteNonQuery();
 
-                CreateData(connection); //данные для проверки
-            }
-        }
+        //        CreateData(connection); //данные для проверки
+        //    }
+        //}
 
         #region CreateData
 
@@ -127,30 +139,6 @@ namespace MetricsManager
                 command.ExecuteNonQuery();
                 command.CommandText = "INSERT INTO rammetrics(AgentId, value, time) VALUES(2, 9652165, 1578344400)";
 
-                command.CommandText = "INSERT INTO cpumetrics(Id, value, time) VALUES(1, 15, 1577998800)";     //1577998800 = 02.01.2020 21:00
-                command.ExecuteNonQuery();
-                command.CommandText = "INSERT INTO cpumetrics(Id, value, time) VALUES(2, 100, 1578344400)";    //1578344400 = 06.01.2020 21:00
-                command.ExecuteNonQuery();
-
-                command.CommandText = "INSERT INTO dotnetmetrics(Id, value, time) VALUES(1, 16, 1577998800)";
-                command.ExecuteNonQuery();
-                command.CommandText = "INSERT INTO dotnetmetrics(Id, value, time) VALUES(2, 99, 1578344400)";
-                command.ExecuteNonQuery();
-
-                command.CommandText = "INSERT INTO hddmetrics(Id, value, time) VALUES(1, 323232, 1577998800)";
-                command.ExecuteNonQuery();
-                command.CommandText = "INSERT INTO hddmetrics(Id, value, time) VALUES(2, 121221, 1578344400)";
-                command.ExecuteNonQuery();
-
-                command.CommandText = "INSERT INTO networkmetrics(Id, value, time) VALUES(1, 101, 1577998800)";
-                command.ExecuteNonQuery();
-                command.CommandText = "INSERT INTO networkmetrics(Id, value, time) VALUES(2, 131, 1578344400)";
-                command.ExecuteNonQuery();
-
-                command.CommandText = "INSERT INTO rammetrics(Id, value, time) VALUES(1, 86543, 1577998800)";
-                command.ExecuteNonQuery();
-                command.CommandText = "INSERT INTO rammetrics(Id, value, time) VALUES(2, 9652165, 1578344400)";
-
                 command.ExecuteNonQuery();
             }
         }
@@ -158,7 +146,7 @@ namespace MetricsManager
         #endregion
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMigrationRunner migrationRunner)
         {
             if (env.IsDevelopment())
             {
@@ -171,6 +159,8 @@ namespace MetricsManager
             {
                 endpoints.MapControllers();
             });
+
+            migrationRunner.MigrateUp(1);
         }
     }
 }
