@@ -26,11 +26,11 @@ namespace MetricsAgent.Repositories
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                connection.Execute($"INSERT INTO cpumetrics(value, time) VALUES({model.Value}, {model.Time.ToUnixTimeSeconds()})",
+                connection.Execute("INSERT INTO cpumetrics(value, time) VALUES(@value, @time)",
                     new
                     {
                         value = model.Value,
-                        time = model.Time
+                        time = model.Time.ToUnixTimeSeconds()
                     });
             }
         }

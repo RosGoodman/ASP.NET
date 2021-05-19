@@ -29,8 +29,6 @@ namespace MetricsManager
             const string connectionString = "Data Source=Metrics.db";
             var connection = new SQLiteConnection(connectionString);
             connection.Open();
-            //PrepareSchema(connection);
-            //services.AddSingleton(connection);
 
             services.AddFluentMigratorCore().ConfigureRunner(builder => builder
                 //добавляем поддержку SQLite

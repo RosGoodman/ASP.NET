@@ -30,7 +30,7 @@ namespace MetricsAgent.Repositories
                     new
                     {
                         value = model.Value,
-                        time = model.Time
+                        time = model.Time.ToUnixTimeSeconds()
                     });
             }
         }

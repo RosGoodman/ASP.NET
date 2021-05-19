@@ -26,11 +26,11 @@ namespace MetricsAgent.Repositories
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                connection.Execute("INSERT INTO hddmetrics(value, time) VALUES(@value, @time)",
+                connection.Execute($"INSERT INTO hddmetrics(value, time) VALUES(@value, @time)",
                     new
                     {
                         value = model.Value,
-                        time = model.Time
+                        time = model.Time.ToUnixTimeSeconds()
                     });
             }
         }

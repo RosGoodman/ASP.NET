@@ -33,10 +33,26 @@ namespace MetricsAgent
             services.AddSingleton(new JobSchedule(
                 jobType: typeof(CpuMetricJob),
                 cronExpression: "0/5 * * * * ?")); // запускать каждые 5 секунд
-            //services.AddSingleton(new JobSchedule(
-            //    jobType: typeof(RamMetricJob),
-            //    cronExpression: "0/5 * * * * ?"));
 
+            services.AddSingleton<HddMetricJob>();
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(HddMetricJob),
+                cronExpression: "0/5 * * * * ?"));
+
+            services.AddSingleton<DotNetMetricJob>();
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(DotNetMetricJob),
+                cronExpression: "0/5 * * * * ?"));
+
+            services.AddSingleton<NetworkMetricJob>();
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(NetworkMetricJob),
+                cronExpression: "0/5 * * * * ?"));
+
+            services.AddSingleton<RamMetricJob>();
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(RamMetricJob),
+                cronExpression: "0/5 * * * * ?"));
 
             services.AddHostedService<QuartzHostedServise>();
         }
