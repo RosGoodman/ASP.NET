@@ -5,6 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Data.SQLite;
 using FluentMigrator.Runner;
+using MetricsAgent.Jobs;
+using Quartz.Spi;
+using Quartz;
+using Quartz.Impl;
 
 namespace MetricsAgent
 {
@@ -21,7 +25,20 @@ namespace MetricsAgent
             services.AddSingleton<INetworkMetricsRepository, NetworkMetricsRepository>();
             services.AddSingleton<IRamMetricsRepository, RamMetricsRepository>();
 
-            
+            // ƒќбавл€ем сервисы
+            services.AddSingleton<IJobFactory, SingletonJobFactory>();
+            services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+            // добавл€ем нашу задачу
+            services.AddSingleton<CpuMetricJob>();
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(CpuMetricJob),
+                cronExpression: "0/5 * * * * ?")); // запускать каждые 5 секунд
+            //services.AddSingleton(new JobSchedule(
+            //    jobType: typeof(RamMetricJob),
+            //    cronExpression: "0/5 * * * * ?"));
+
+
+            services.AddHostedService<QuartzHostedServise>();
         }
 
         private void ConfigureServiceConnection(IServiceCollection services)
@@ -39,77 +56,7 @@ namespace MetricsAgent
                 //подсказываем где искать классы с миграци€ми
                 .ScanIn(typeof(Startup).Assembly).For.Migrations())
                 .AddLogging(lb => lb.AddFluentMigratorConsole());
-
-            CreateData(connection); //данные дл€ проверки
         }
-
-        //private static void PrepareSchema(SQLiteConnection connection)
-        //{
-        //    using var command = new SQLiteCommand(connection);
-        //    command.CommandText = "DROP TABLE IF EXISTS cpumetrics";
-        //    command.ExecuteNonQuery();
-        //    command.CommandText = @"CREATE TABLE cpumetrics(id INTEGER PRIMARY KEY, value INT, time INT)";
-        //    command.ExecuteNonQuery();
-
-        //    command.CommandText = "DROP TABLE IF EXISTS dotnetmetrics";
-        //    command.ExecuteNonQuery();
-        //    command.CommandText = @"CREATE TABLE dotnetmetrics(id INTEGER PRIMARY KEY, value INT, time INT)";
-        //    command.ExecuteNonQuery();
-
-        //    command.CommandText = "DROP TABLE IF EXISTS hddmetrics";
-        //    command.ExecuteNonQuery();
-        //    command.CommandText = @"CREATE TABLE hddmetrics(id INTEGER PRIMARY KEY, value INT, time INT)";
-        //    command.ExecuteNonQuery();
-
-        //    command.CommandText = "DROP TABLE IF EXISTS networkmetrics";
-        //    command.ExecuteNonQuery();
-        //    command.CommandText = @"CREATE TABLE networkmetrics(id INTEGER PRIMARY KEY, value INT, time INT)";
-        //    command.ExecuteNonQuery();
-
-        //    command.CommandText = "DROP TABLE IF EXISTS rammetrics";
-        //    command.ExecuteNonQuery();
-        //    command.CommandText = @"CREATE TABLE rammetrics(id INTEGER PRIMARY KEY, value INT, time INT)";
-        //    command.ExecuteNonQuery();
-
-        //    CreateData(connection); //данные дл€ проверки
-        //}
-
-        #region CreateData
-
-        //TODO: удалить после завершени€ проверок
-
-        /// <summary>¬ременный метод дл€ внесени€ данных в Ѕƒ</summary>
-        /// <param name="conection"></param>
-        private static void CreateData(SQLiteConnection connection)
-        {
-            using var command = new SQLiteCommand(connection);
-            command.CommandText = "INSERT INTO cpumetrics(value, time) VALUES(15, 1577998800)";     //1577998800 = 02.01.2020 21:00
-            command.ExecuteNonQuery();
-            command.CommandText = "INSERT INTO cpumetrics(value, time) VALUES(100, 1578344400)";     //1577998800 = 02.01.2020 21:00
-            command.ExecuteNonQuery();
-
-            command.CommandText = "INSERT INTO dotnetmetrics(value, time) VALUES(16, 1577998800)";
-            command.ExecuteNonQuery();
-            command.CommandText = "INSERT INTO dotnetmetrics(value, time) VALUES(99, 1578344400)";
-            command.ExecuteNonQuery();
-
-            command.CommandText = "INSERT INTO hddmetrics(value, time) VALUES(323232, 1577998800)";
-            command.ExecuteNonQuery();
-            command.CommandText = "INSERT INTO hddmetrics(value, time) VALUES(121221, 1578344400)";
-            command.ExecuteNonQuery();
-
-            command.CommandText = "INSERT INTO networkmetrics(value, time) VALUES(101, 1577998800)";
-            command.ExecuteNonQuery();
-            command.CommandText = "INSERT INTO networkmetrics(value, time) VALUES(131, 1578344400)";
-            command.ExecuteNonQuery();
-
-            command.CommandText = "INSERT INTO rammetrics(value, time) VALUES(86543, 1577998800)";
-            command.ExecuteNonQuery();
-            command.CommandText = "INSERT INTO rammetrics(value, time) VALUES(9652165, 1578344400)";
-            command.ExecuteNonQuery();
-        }
-
-        #endregion
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMigrationRunner migrationRunner)

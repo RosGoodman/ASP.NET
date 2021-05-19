@@ -26,7 +26,7 @@ namespace MetricsAgent.Repositories
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                connection.Execute("INSERT INTO cpumetrics(value, time) VALUES(@value, @time)",
+                connection.Execute($"INSERT INTO cpumetrics(value, time) VALUES({model.Value}, {model.Time.ToUnixTimeSeconds()})",
                     new
                     {
                         value = model.Value,
@@ -38,7 +38,7 @@ namespace MetricsAgent.Repositories
         public List<CpuMetricsModel> GetMetricsFromeTimeToTime(DateTimeOffset fromTime, DateTimeOffset toTime)
         {
             using var connection = new SQLiteConnection(ConnectionString);
-            return connection.Query<CpuMetricsModel>($"SELECT time, value From cpumetrics WHERE time >= @fromTime AND time <= @toTime",
+            return connection.Query<CpuMetricsModel>($"SELECT time, value From cpumetrics WHERE time > @fromTime AND time < @toTime",
                     new
                     {
                         fromTime = fromTime.ToUnixTimeSeconds(),
