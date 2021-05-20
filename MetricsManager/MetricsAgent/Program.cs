@@ -11,16 +11,6 @@ namespace MetricsAgent
     {
         public static void Main(string[] args)
         {
-
-            PerformanceCounterCategory[] categories = PerformanceCounterCategory.GetCategories();
-            foreach (var category in categories)
-            {
-                string[] instanceNames = category.GetInstanceNames();
-                foreach (string instanceName in instanceNames)
-                    Console.WriteLine(instanceName.ToString());
-                    //PerformanceCounter[] counters = category.GetCounters(instanceName);
-            }
-
             var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
             try
             {
