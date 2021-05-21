@@ -3,8 +3,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog.Web;
 using System;
+using System.Diagnostics;
 
-namespace MetricsManager
+namespace MetricsAgent
 {
     public class Program
     {
@@ -32,13 +33,15 @@ namespace MetricsManager
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(webBuilder =>
-            {
-                webBuilder.UseStartup<Startup>();
-            })
-                .ConfigureLogging(logging =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                })
+            .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders(); // создание провайдеров логирования
                     logging.SetMinimumLevel(LogLevel.Trace); // устанавливаем минимальный уровень логирования
-                }).UseNLog(); // добавляем библиотеку nlog
+                })
+            .UseNLog(); // добавляем библиотеку nlog
+
     }
 }
