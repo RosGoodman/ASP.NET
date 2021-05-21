@@ -58,7 +58,7 @@ namespace MetricsManager.Client
             return null;
         }
 
-        public AllDotNetMetricsResponse GetAllDonNetMetrics(DotNetMetrisApiRequest request)
+        public AllDotNetMetricsResponse GetAllDonNetMetrics(GetAllDotNetMetricsApiRequest request)
         {
             var fromParameter = request.FromTime.ToUnixTimeSeconds();
             var toParameter = request.ToTime.ToUnixTimeSeconds();

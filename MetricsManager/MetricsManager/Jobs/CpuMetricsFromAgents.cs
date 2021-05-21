@@ -31,12 +31,24 @@ namespace MetricsManager.Jobs
 
             foreach (var agent in agents)
             {
-                AllCpuMetricsResponse allCpuMetrics = _client.GetAllCpuMetrics(new GetAllCpuMetricsApiRequest 
+                AllCpuMetricsResponse allMetrics = _client.GetAllCpuMetrics(new GetAllCpuMetricsApiRequest
                 {
                     FromTime = fromTime,
                     ToTime = toTime,
-                    ClientBaseAddress = agent.
-                })
+                    ClientBaseAddress = agent.Address
+                });
+
+                if (allMetrics != null)
+                {
+                    foreach (var metric in allMetrics.Metrics)
+                    {
+                        _repository.Create(new CpuMetricsModel{
+                            AgentId = agent.Id,
+                            Value = metric.Value,
+                            Time = metric.Time
+                        });
+                    }
+                }
             }
 
             return Task.CompletedTask;

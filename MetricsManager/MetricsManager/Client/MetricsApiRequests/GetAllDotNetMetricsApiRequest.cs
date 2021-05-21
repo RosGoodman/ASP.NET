@@ -2,7 +2,7 @@
 
 namespace MetricsManager.Client.MetricsApiRequests
 {
-    public class DotNetMetrisApiRequest
+    public class GetAllDotNetMetricsApiRequest
     {
         public DateTimeOffset FromTime { get; set; }
         public DateTimeOffset ToTime { get; set; }
