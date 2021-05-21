@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace MetricsManager.Client
 {
-    public class MetricsAgentClient : IMetricsAgentClient
+    public class MetricsAgentClient : IMetricsAgentClient 
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<MetricsAgentClient> _logger;
