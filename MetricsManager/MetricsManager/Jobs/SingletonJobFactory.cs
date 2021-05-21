@@ -3,7 +3,7 @@ using Quartz;
 using Quartz.Spi;
 using System;
 
-namespace MetricsAgent.Jobs
+namespace MetricsManager.Jobs
 {
     public class SingletonJobFactory : IJobFactory
     {

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MetricsAgent.Jobs
+namespace MetricsManager.Jobs
 {
     public class QuartzHostedServise : IHostedService
     {

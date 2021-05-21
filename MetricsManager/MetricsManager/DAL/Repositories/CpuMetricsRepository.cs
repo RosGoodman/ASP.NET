@@ -67,5 +67,12 @@ namespace MetricsManager.Repositories
                         toTime = toTime.ToUnixTimeSeconds()
                     }).ToList();
         }
+
+        public DateTimeOffset GetLastTime()
+        {
+            using var connection = new SQLiteConnection(ConnectionString);
+            var result = connection.QueryFirstOrDefault<CpuMetricsModel>("SELECT * FROM cpumetrics ORDER BY time DESC LIMIT 1");
+            return result.Time;
+        }
     }
 }

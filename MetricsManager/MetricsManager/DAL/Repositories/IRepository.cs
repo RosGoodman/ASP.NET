@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace MetricsManager.Repositories
 {
@@ -7,5 +8,6 @@ namespace MetricsManager.Repositories
         IList<T> GetAll();
         T GetById(int id);
         void Create(T item);
+        DateTimeOffset GetLastTime();
     }
 }
