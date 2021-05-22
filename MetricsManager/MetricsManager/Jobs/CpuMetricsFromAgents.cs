@@ -1,4 +1,5 @@
 ﻿using MetricsManager.Client;
+using MetricsManager.Client.ApiResponses;
 using MetricsManager.Client.MetricsApiRequests;
 using MetricsManager.Models;
 using MetricsManager.Repositories;
@@ -31,14 +32,14 @@ namespace MetricsManager.Jobs
 
             foreach (var agent in agents)
             {
-                AllCpuMetricsResponse allMetrics = _client.GetAllCpuMetrics(new GetAllCpuMetricsApiRequest
+                AllCpuMetricsApiResponse allMetrics = _client.GetAllCpuMetrics(new GetAllCpuMetricsApiRequest
                 {
                     FromTime = fromTime,
                     ToTime = toTime,
                     ClientBaseAddress = agent.Address
                 });
 
-                if (allMetrics.Metrics != null)
+                if (allMetrics != null)
                 {
                     foreach (var metric in allMetrics.Metrics)
                     {

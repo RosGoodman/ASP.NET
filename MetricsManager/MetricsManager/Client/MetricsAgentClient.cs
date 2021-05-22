@@ -1,4 +1,5 @@
-﻿using MetricsManager.Client.MetricsApiRequests;
+﻿using MetricsManager.Client.ApiResponses;
+using MetricsManager.Client.MetricsApiRequests;
 using MetricsManager.Responses;
 using Microsoft.Extensions.Logging;
 using System;
@@ -38,17 +39,17 @@ namespace MetricsManager.Client
             return null;
         }
 
-        public AllCpuMetricsResponse GetAllCpuMetrics(GetAllCpuMetricsApiRequest request)
+        public AllCpuMetricsApiResponse GetAllCpuMetrics(GetAllCpuMetricsApiRequest request)
         {
-            var fromParameter = request.FromTime.ToUnixTimeSeconds();
-            var toParameter = request.ToTime.ToUnixTimeSeconds();
-            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"http://{request.ClientBaseAddress}/api/metrics/cpu/from/{fromParameter}/to/{toParameter}");
+            var fromParameter = request.FromTime.Date;
+            var toParameter = request.ToTime;
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"http://{request.ClientBaseAddress}/api/metrics/cpu/from/2019-01-01/to/2022-01-12");
             try
             {
                 HttpResponseMessage response = _httpClient.SendAsync(httpRequest).Result;
 
                 using var responseStream = response.Content.ReadAsStreamAsync().Result;
-                return JsonSerializer.DeserializeAsync<AllCpuMetricsResponse>(responseStream).Result;
+                return JsonSerializer.DeserializeAsync<AllCpuMetricsApiResponse>(responseStream).Result;
             }
             catch (Exception ex)
             {

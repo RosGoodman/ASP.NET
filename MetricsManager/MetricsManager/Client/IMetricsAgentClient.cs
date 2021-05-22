@@ -1,4 +1,5 @@
-﻿using MetricsManager.Client.MetricsApiRequests;
+﻿using MetricsManager.Client.ApiResponses;
+using MetricsManager.Client.MetricsApiRequests;
 using MetricsManager.Responses;
 
 namespace MetricsManager.Client
@@ -11,7 +12,7 @@ namespace MetricsManager.Client
 
         AllDotNetMetricsResponse GetAllDonNetMetrics(GetAllDotNetMetricsApiRequest request);
 
-        AllCpuMetricsResponse GetAllCpuMetrics(GetAllCpuMetricsApiRequest request);
+        AllCpuMetricsApiResponse GetAllCpuMetrics(GetAllCpuMetricsApiRequest request);
 
         AllNetworkMetricsResponse GetAllNetworkMetrics(GetAllNetworkMetricsApiRequest request);
     }
