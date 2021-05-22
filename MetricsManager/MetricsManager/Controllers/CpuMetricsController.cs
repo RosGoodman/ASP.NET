@@ -62,28 +62,6 @@ namespace MetricsManager.Controllers
 
             return Ok(metrics);
         }
-
-        [HttpGet("all")]
-        public IActionResult GetMetricsAll()
-        {
-            _logger.LogInformation($"Запрос на получение метрик CPU");
-
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<CpuMetricsModel, CpuMetricsDto>());
-            var m = config.CreateMapper();
-            IList<CpuMetricsModel> metrics = _repository.GetAll();
-
-            var response = new AllCpuMetricsResponse()
-            {
-                Metrics = new List<CpuMetricsDto>()
-            };
-
-            foreach (var metric in metrics)
-            {
-                response.Metrics.Add(m.Map<CpuMetricsDto>(metric));
-            }
-
-            return Ok(response);
-        }
     }
 }
 

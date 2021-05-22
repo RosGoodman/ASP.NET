@@ -26,10 +26,10 @@ namespace MetricsManager.Repositories
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                connection.Execute("INSERT INTO hddmetrics(Id, value, time) VALUES(@Id, @value, @time)",
+                connection.Execute("INSERT INTO hddmetrics(AgentId, value, time) VALUES(@AgentId, @value, @time)",
                     new
                     {
-                        Id = model.Id,
+                        AgentId = model.AgentId,
                         value = model.Value,
                         time = model.Time
                     });

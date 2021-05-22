@@ -33,6 +33,7 @@ namespace MetricsManager.Jobs
             {
                 AllNetworkMetricsResponse allMetrics = _client.GetAllNetworkMetrics(new GetAllNetworkMetricsApiRequest
                 {
+                    AgentId = agent.Id,
                     FromTime = fromTime,
                     ToTime = toTime,
                     ClientBaseAddress = agent.Address

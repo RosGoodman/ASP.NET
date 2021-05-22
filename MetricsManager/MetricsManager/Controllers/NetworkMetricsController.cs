@@ -62,27 +62,5 @@ namespace MetricsManager.Controllers
 
             return Ok(metrics);
         }
-
-        [HttpGet("all")]
-        public IActionResult GetMetricsAll()
-        {
-            _logger.LogInformation($"Запрос на получение метрик Network");
-
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<NetworkMetricsModel, NetworkMetricsDto>());
-            var m = config.CreateMapper();
-            IList<NetworkMetricsModel> metrics = _repository.GetAll();
-
-            var response = new AllNetworkMetricsResponse()
-            {
-                Metrics = new List<NetworkMetricsDto>()
-            };
-
-            foreach (var metric in metrics)
-            {
-                response.Metrics.Add(m.Map<NetworkMetricsDto>(metric));
-            }
-
-            return Ok(response);
-        }
     }
 }

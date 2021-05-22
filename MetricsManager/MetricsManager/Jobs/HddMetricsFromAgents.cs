@@ -33,6 +33,7 @@ namespace MetricsManager.Jobs
             {
                 AllHddMetricsResponse allMetrics = _client.GetAllHddMetricsAsync(new GetAllHddMetricsApiRequest
                 {
+                    AgentId = agent.Id,
                     FromTime = fromTime,
                     ToTime = toTime,
                     ClientBaseAddress = agent.Address

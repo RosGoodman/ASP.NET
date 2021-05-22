@@ -33,6 +33,7 @@ namespace MetricsManager.Jobs
             {
                 AllRamMetricsResponse allMetrics = _client.GetAllRamMetrics(new GetAllRamMetricsApiRequest
                 {
+                    AgentId = agent.Id,
                     FromTime = fromTime,
                     ToTime = toTime,
                     ClientBaseAddress = agent.Address

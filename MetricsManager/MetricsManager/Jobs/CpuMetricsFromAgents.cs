@@ -33,6 +33,7 @@ namespace MetricsManager.Jobs
             {
                 AllCpuMetricsResponse allMetrics = _client.GetAllCpuMetricsAsync(new GetAllCpuMetricsApiRequest
                 {
+                    AgentId = agent.Id,
                     FromTime = fromTime,
                     ToTime = toTime,
                     ClientBaseAddress = agent.Address

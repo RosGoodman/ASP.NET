@@ -28,10 +28,10 @@ namespace MetricsManager.Repositories
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                connection.Execute("INSERT INTO cpumetrics(agentId, value, time) VALUES(@Id, @value, @time)",
+                connection.Execute("INSERT INTO cpumetrics(AgentId, value, time) VALUES(@AgentId, @value, @time)",
                     new
                     {
-                        agentId = model.Id,
+                        AgentId = model.AgentId,
                         value = model.Value,
                         time = model.Time
                     });

@@ -62,27 +62,5 @@ namespace MetricsManager.Controllers
 
             return Ok(metrics);
         }
-
-        [HttpGet("all")]
-        public IActionResult GetMetricsAll()
-        {
-            _logger.LogInformation($"Запрос на получение метрик RAM");
-
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<RamMetricsModel, RamMetricsDto>());
-            var m = config.CreateMapper();
-            IList<RamMetricsModel> metrics = _repository.GetAll();
-
-            var response = new AllRamMetricsResponse()
-            {
-                Metrics = new List<RamMetricsDto>()
-            };
-
-            foreach (var metric in metrics)
-            {
-                response.Metrics.Add(m.Map<RamMetricsDto>(metric));
-            }
-
-            return Ok(response);
-        }
     }
 }

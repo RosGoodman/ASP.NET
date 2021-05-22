@@ -62,27 +62,5 @@ namespace MetricsManager.Controllers
 
             return Ok(metrics);
         }
-
-        [HttpGet("all")]
-        public IActionResult GetMetricsAll()
-        {
-            _logger.LogInformation($"Запрос на получение метрик HDD");
-
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<HddMetricsModel, HddMetricsDto>());
-            var m = config.CreateMapper();
-            IList<HddMetricsModel> metrics = _repository.GetAll();
-
-            var response = new AllHddMetricsResponse()
-            {
-                Metrics = new List<HddMetricsDto>()
-            };
-
-            foreach (var metric in metrics)
-            {
-                response.Metrics.Add(m.Map<HddMetricsDto>(metric));
-            }
-
-            return Ok(response);
-        }
     }
 }

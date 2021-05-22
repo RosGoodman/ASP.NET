@@ -62,27 +62,5 @@ namespace MetricsManager.Controllers
 
             return Ok(metrics);
         }
-
-        [HttpGet("all")]
-        public IActionResult GetMetricsAll()
-        {
-            _logger.LogInformation($"Запрос на получение метрик DotNet");
-
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<DotNetMetricsModel, DotNetMetricsDto>());
-            var m = config.CreateMapper();
-            IList<DotNetMetricsModel> metrics = _repository.GetAll();
-
-            var response = new AllDotNetMetricsResponse()
-            {
-                Metrics = new List<DotNetMetricsDto>()
-            };
-
-            foreach (var metric in metrics)
-            {
-                response.Metrics.Add(m.Map<DotNetMetricsDto>(metric));
-            }
-
-            return Ok(response);
-        }
     }
 }
