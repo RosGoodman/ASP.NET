@@ -24,15 +24,25 @@ namespace MetricsManager.Client
 
         public AllHddMetricsResponse GetAllHddMetricsAsync(GetAllHddMetricsApiRequest request)
         {
-            var fromParameter = request.FromTime.ToUnixTimeSeconds();
-            var toParameter = request.ToTime.ToUnixTimeSeconds();
+            var fromParameter = request.FromTime.ToString("u");
+            var toParameter = request.ToTime.ToString("u");
+
             var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"http://{request.ClientBaseAddress}/api/metrics/hdd/from/{fromParameter}/to/{toParameter}");
             try
             {
                 HttpResponseMessage response = _httpClient.SendAsync(httpRequest).Result;
 
                 using var responseStream = response.Content.ReadAsStreamAsync().Result;
-                return JsonSerializer.DeserializeAsync<AllHddMetricsResponse>(responseStream).Result;
+                using var streamReader = new StreamReader(responseStream);
+                var values = streamReader.ReadToEnd();
+
+                AllHddMetricsResponse allMetricsResponse = new();
+                allMetricsResponse.Metrics = JsonSerializer.Deserialize<List<HddMetricsDto>>(values, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                return allMetricsResponse;
             }
             catch (Exception ex)
             {
@@ -44,35 +54,25 @@ namespace MetricsManager.Client
 
         public AllCpuMetricsResponse GetAllCpuMetricsAsync(GetAllCpuMetricsApiRequest request)
         {
-            string fromParameter = request.FromTime.ToString("yyyy-MM-dd HH-mm-ss");
-            string toParameter = request.ToTime.ToString("yyyy-MM-dd HH-mm-ss");
+            string fromParameter = request.FromTime.ToString("u");
+            string toParameter = request.ToTime.ToString("u");
+
             var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"http://{request.ClientBaseAddress}/api/metrics/cpu/from/{fromParameter}/to/{toParameter}");
             try
             {
                 HttpResponseMessage response = _httpClient.SendAsync(httpRequest).Result;
 
                 using var responseStream = response.Content.ReadAsStreamAsync().Result;
-
                 using var streamReader = new StreamReader(responseStream);
                 var values = streamReader.ReadToEnd();
 
-                var result = JsonSerializer.Deserialize<IList<CpuMetricsDto>>(values, new JsonSerializerOptions
+                AllCpuMetricsResponse allMetricsResponse = new();
+                allMetricsResponse.Metrics = JsonSerializer.Deserialize<List<CpuMetricsDto>>(values, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });
 
-                List<CpuMetricsDto> newMetricsList = new();
-
-                foreach (var metric in result)
-                {
-                    var newMetric = new CpuMetricsDto { Time = metric.Time, Value = metric.Value };
-                    newMetricsList.Add(newMetric);
-                }
-
-                AllCpuMetricsResponse allCpuMetricsResponse = new();
-                allCpuMetricsResponse.Metrics = newMetricsList;
-
-                return allCpuMetricsResponse;
+                return allMetricsResponse;
             }
             catch (Exception ex)
             {
@@ -84,15 +84,25 @@ namespace MetricsManager.Client
 
         public AllDotNetMetricsResponse GetAllDonNetMetrics(GetAllDotNetMetricsApiRequest request)
         {
-            var fromParameter = request.FromTime.ToUnixTimeSeconds();
-            var toParameter = request.ToTime.ToUnixTimeSeconds();
+            var fromParameter = request.FromTime.ToString("u");
+            var toParameter = request.ToTime.ToString("u");
+
             var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"http://{request.ClientBaseAddress}/api/metrics/dotnet/from/{fromParameter}/to/{toParameter}");
             try
             {
                 HttpResponseMessage response = _httpClient.SendAsync(httpRequest).Result;
 
                 using var responseStream = response.Content.ReadAsStreamAsync().Result;
-                return JsonSerializer.DeserializeAsync<AllDotNetMetricsResponse>(responseStream).Result;
+                using var streamReader = new StreamReader(responseStream);
+                var values = streamReader.ReadToEnd();
+
+                AllDotNetMetricsResponse allMetricsResponse = new();
+                allMetricsResponse.Metrics = JsonSerializer.Deserialize<List<DotNetMetricsDto>>(values, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                return allMetricsResponse;
             }
             catch (Exception ex)
             {
@@ -104,15 +114,25 @@ namespace MetricsManager.Client
 
         public AllNetworkMetricsResponse GetAllNetworkMetrics(GetAllNetworkMetricsApiRequest request)
         {
-            var fromParameter = request.FromTime.ToUniversalTime();
-            var toParameter = request.ToTime.ToUnixTimeSeconds();
+            var fromParameter = request.FromTime.ToString("u");
+            var toParameter = request.ToTime.ToString("u");
+
             var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"http://{request.ClientBaseAddress}/api/metrics/network/from/{fromParameter}/to/{toParameter}");
             try
             {
                 HttpResponseMessage response = _httpClient.SendAsync(httpRequest).Result;
 
                 using var responseStream = response.Content.ReadAsStreamAsync().Result;
-                return JsonSerializer.DeserializeAsync<AllNetworkMetricsResponse>(responseStream).Result;
+                using var streamReader = new StreamReader(responseStream);
+                var values = streamReader.ReadToEnd();
+
+                AllNetworkMetricsResponse allMetricsResponse = new();
+                allMetricsResponse.Metrics = JsonSerializer.Deserialize<List<NetworkMetricsDto>>(values, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                return allMetricsResponse;
             }
             catch (Exception ex)
             {
@@ -124,15 +144,25 @@ namespace MetricsManager.Client
 
         public AllRamMetricsResponse GetAllRamMetrics(GetAllRamMetricsApiRequest request)
         {
-            var fromParameter = request.FromTime.ToUnixTimeSeconds();
-            var toParameter = request.ToTime.ToUnixTimeSeconds();
+            var fromParameter = request.FromTime.ToString("u");
+            var toParameter = request.ToTime.ToString("u");
+
             var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"http://{request.ClientBaseAddress}/api/metrics/ram/from/{fromParameter}/to/{toParameter}");
             try
             {
                 HttpResponseMessage response = _httpClient.SendAsync(httpRequest).Result;
 
                 using var responseStream = response.Content.ReadAsStreamAsync().Result;
-                return JsonSerializer.DeserializeAsync<AllRamMetricsResponse>(responseStream).Result;
+                using var streamReader = new StreamReader(responseStream);
+                var values = streamReader.ReadToEnd();
+
+                AllRamMetricsResponse allMetricsResponse = new();
+                allMetricsResponse.Metrics = JsonSerializer.Deserialize<List<RamMetricsDto>>(values, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                return allMetricsResponse;
             }
             catch (Exception ex)
             {

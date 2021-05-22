@@ -37,12 +37,14 @@ namespace MetricsAgent.Repositories
 
         public IList<CpuMetricsModel> GetMetricsFromeTimeToTime(DateTimeOffset fromTime, DateTimeOffset toTime)
         {
+            long fromTimeq = fromTime.ToUnixTimeSeconds();
+            long toTimeq = toTime.ToUnixTimeSeconds();
             using var connection = new SQLiteConnection(ConnectionString);
             return connection.Query<CpuMetricsModel>($"SELECT time, value From cpumetrics WHERE time > @fromTime AND time < @toTime",
                     new
                     {
-                        fromTime = fromTime.ToUnixTimeSeconds(),
-                        toTime = toTime.ToUnixTimeSeconds()
+                        fromTime = fromTimeq,
+                        toTime = toTimeq
                     }).ToList();
         }
     }

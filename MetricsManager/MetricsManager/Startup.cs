@@ -42,25 +42,25 @@ namespace MetricsManager
                 jobType: typeof(CpuMetricsFromAgents),
                 cronExpression: "0/20 * * * * ?")); // запускать каждые 30 секунд
 
-            //services.AddSingleton<HddMetricsFromAgents>();
-            //services.AddSingleton(new JobSchedule(
-            //    jobType: typeof(HddMetricsFromAgents),
-            //    cronExpression: "0/30 * * * * ?"));
+            services.AddSingleton<HddMetricsFromAgents>();
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(HddMetricsFromAgents),
+                cronExpression: "0/30 * * * * ?"));
 
-            //services.AddSingleton<DotNetMetricsFromAgents>();
-            //services.AddSingleton(new JobSchedule(
-            //    jobType: typeof(DotNetMetricsFromAgents),
-            //    cronExpression: "0/30 * * * * ?"));
+            services.AddSingleton<DotNetMetricsFromAgents>();
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(DotNetMetricsFromAgents),
+                cronExpression: "0/30 * * * * ?"));
 
-            //services.AddSingleton<NetworkMetricsFromAgents>();
-            //services.AddSingleton(new JobSchedule(
-            //    jobType: typeof(NetworkMetricsFromAgents),
-            //    cronExpression: "0/30 * * * * ?"));
+            services.AddSingleton<NetworkMetricsFromAgents>();
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(NetworkMetricsFromAgents),
+                cronExpression: "0/30 * * * * ?"));
 
-            //services.AddSingleton<RamMetricsFromAgents>();
-            //services.AddSingleton(new JobSchedule(
-            //    jobType: typeof(RamMetricsFromAgents),
-            //    cronExpression: "0/30 * * * * ?"));
+            services.AddSingleton<RamMetricsFromAgents>();
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(RamMetricsFromAgents),
+                cronExpression: "0/30 * * * * ?"));
 
             services.AddHostedService<QuartzHostedServise>();
         }

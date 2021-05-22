@@ -30,12 +30,11 @@ namespace MetricsAgent.Controllers
         }
 
         [HttpGet("from/{fromTime}/to/{toTime}")]
-        public IActionResult GetMetricsFromTimeToTime([FromRoute] CpuMetricsRequest request)
+        public IActionResult GetMetricsFromTimeToTime([FromRoute] MetricsRequest request)
         {
-
             _logger.LogInformation($"Запрос на получение метрик CPU (" +
-                $"fromTime = {request.FromTime:yyyy-M-d}," +
-                $" toTime = {request.ToTime:yyyy-M-d})");
+                $"fromTime = {request.FromTime:u}," +
+                $" toTime = {request.ToTime:u})");
 
             var config = new MapperConfiguration(cfg => cfg.CreateMap<CpuMetricsModel, CpuMetricsDto>());
             var m = config.CreateMapper();

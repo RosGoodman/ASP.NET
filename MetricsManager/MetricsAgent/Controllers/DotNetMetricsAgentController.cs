@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
+using MetricsAgent.Controllers.Requests;
 using MetricsAgent.Models;
 using MetricsAgent.Repositories;
 using MetricsAgent.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 
 namespace MetricsAgent.Controllers
@@ -23,13 +23,15 @@ namespace MetricsAgent.Controllers
         }
 
         [HttpGet("from/{fromTime}/to/{toTime}")]
-        public IActionResult GetMetricsFromTimeToTime([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
+        public IActionResult GetMetricsFromTimeToTime([FromRoute] MetricsRequest request)
         {
-            _logger.LogInformation($"Запрос на получение метрик DotNet (fromTime = {fromTime}, toTime = {toTime})");
+            _logger.LogInformation($"Запрос на получение метрик DotNet (" +
+                $"fromTime = {request.FromTime:u}," +
+                $" toTime = {request.ToTime:u})");
 
             var config = new MapperConfiguration(cfg => cfg.CreateMap<DotNetMetricsModel, DotNetMetricsDto>());
             var m = config.CreateMapper();
-            IList<DotNetMetricsModel> metrics = _repository.GetMetricsFromeTimeToTime(fromTime, toTime);
+            IList<DotNetMetricsModel> metrics = _repository.GetMetricsFromeTimeToTime(request.FromTime, request.ToTime);
 
             var response = new AllDotNetMetricsResponse()
             {

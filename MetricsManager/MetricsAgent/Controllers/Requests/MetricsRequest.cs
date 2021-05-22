@@ -3,7 +3,7 @@ using System;
 
 namespace MetricsAgent.Controllers.Requests
 {
-    public record CpuMetricsRequest
+    public record MetricsRequest
     (
         [FromRoute] DateTimeOffset FromTime,
         [FromRoute] DateTimeOffset ToTime
