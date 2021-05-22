@@ -1,6 +1,7 @@
 ﻿using MetricsManager.Client.ApiResponses;
 using MetricsManager.Client.MetricsApiRequests;
 using MetricsManager.Responses;
+using System.Collections.Generic;
 
 namespace MetricsManager.Client
 {
@@ -8,11 +9,11 @@ namespace MetricsManager.Client
     {
         AllRamMetricsResponse GetAllRamMetrics(GetAllRamMetricsApiRequest request);
 
-        AllHddMetricsResponse GetAllHddMetrics(GetAllHddMetricsApiRequest request);
+        AllHddMetricsResponse GetAllHddMetricsAsync(GetAllHddMetricsApiRequest request);
 
         AllDotNetMetricsResponse GetAllDonNetMetrics(GetAllDotNetMetricsApiRequest request);
 
-        AllCpuMetricsApiResponse GetAllCpuMetrics(GetAllCpuMetricsApiRequest request);
+        AllCpuMetricsResponse GetAllCpuMetricsAsync(GetAllCpuMetricsApiRequest request);
 
         AllNetworkMetricsResponse GetAllNetworkMetrics(GetAllNetworkMetricsApiRequest request);
     }

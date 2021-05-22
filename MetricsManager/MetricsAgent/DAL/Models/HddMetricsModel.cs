@@ -4,7 +4,7 @@ namespace MetricsAgent.Models
 {
     public class HddMetricsModel
     {
-        public int Value { get; set; }
+        public long Value { get; set; }
 
         public DateTimeOffset Time { get; set; }
     }

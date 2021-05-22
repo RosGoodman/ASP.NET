@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MetricsAgent.Controllers.Requests;
 using MetricsAgent.Models;
 using MetricsAgent.Repositories;
 using MetricsAgent.Responses;
@@ -29,13 +30,16 @@ namespace MetricsAgent.Controllers
         }
 
         [HttpGet("from/{fromTime}/to/{toTime}")]
-        public IActionResult GetMetricsFromTimeToTime([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
+        public IActionResult GetMetricsFromTimeToTime([FromRoute] CpuMetricsRequest request)
         {
-            _logger.LogInformation($"Запрос на получение метрик CPU (fromTime = {fromTime}, toTime = {toTime})");
+
+            _logger.LogInformation($"Запрос на получение метрик CPU (" +
+                $"fromTime = {request.FromTime:yyyy-M-d}," +
+                $" toTime = {request.ToTime:yyyy-M-d})");
 
             var config = new MapperConfiguration(cfg => cfg.CreateMap<CpuMetricsModel, CpuMetricsDto>());
             var m = config.CreateMapper();
-            IList<CpuMetricsModel> metrics = _repository.GetMetricsFromeTimeToTime(fromTime, toTime);
+            IList<CpuMetricsModel> metrics = _repository.GetMetricsFromeTimeToTime(request.FromTime, request.ToTime);
 
             var response = new AllCpuMetricsResponse()
             {

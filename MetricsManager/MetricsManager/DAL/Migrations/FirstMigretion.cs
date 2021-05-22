@@ -34,7 +34,7 @@ namespace MetricsManager.DAL.Migrations
             Create.Table("hddmetrics")
                 .WithColumn("id").AsInt64().PrimaryKey().Identity()
                 .WithColumn("AgentId").AsInt64()
-                .WithColumn("value").AsInt32()
+                .WithColumn("value").AsInt64()
                 .WithColumn("time").AsInt64();
             Create.Table("networkmetrics")
                 .WithColumn("id").AsInt64().PrimaryKey().Identity()

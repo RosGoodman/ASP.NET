@@ -5,7 +5,7 @@ namespace MetricsAgent.Responses
 {
     public class HddMetricsDto
     {
-        public int Value { get; set; }
+        public long Value { get; set; }
         public DateTimeOffset Time { get; set; }
     }
 

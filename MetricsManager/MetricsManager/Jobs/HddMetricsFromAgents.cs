@@ -31,7 +31,7 @@ namespace MetricsManager.Jobs
 
             foreach (var agent in agents)
             {
-                AllHddMetricsResponse allMetrics = _client.GetAllHddMetrics(new GetAllHddMetricsApiRequest
+                AllHddMetricsResponse allMetrics = _client.GetAllHddMetricsAsync(new GetAllHddMetricsApiRequest
                 {
                     FromTime = fromTime,
                     ToTime = toTime,

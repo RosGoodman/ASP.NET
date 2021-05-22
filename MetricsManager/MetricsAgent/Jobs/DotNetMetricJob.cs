@@ -20,7 +20,7 @@ namespace MetricsAgent.Jobs
 
         public Task Execute(IJobExecutionContext context)
         {
-            int value = Convert.ToInt32(_dotNetCounter.NextValue());
+            long value = Convert.ToInt64(_dotNetCounter.NextValue());
             DateTimeOffset time = DateTimeOffset.UtcNow;
             _repository.Create(new DotNetMetricsModel { Time = time, Value = value });
 

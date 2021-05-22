@@ -10,7 +10,7 @@ namespace MetricsAgent.Repositories
 {
     public interface ICpuMetricsRepository : IRepository<CpuMetricsModel>
     {
-        List<CpuMetricsModel> GetMetricsFromeTimeToTime(DateTimeOffset fromTime, DateTimeOffset toTime);
+        IList<CpuMetricsModel> GetMetricsFromeTimeToTime(DateTimeOffset fromTime, DateTimeOffset toTime);
     }
 
     public class CpuMetricsRepository : ICpuMetricsRepository
@@ -35,7 +35,7 @@ namespace MetricsAgent.Repositories
             }
         }
 
-        public List<CpuMetricsModel> GetMetricsFromeTimeToTime(DateTimeOffset fromTime, DateTimeOffset toTime)
+        public IList<CpuMetricsModel> GetMetricsFromeTimeToTime(DateTimeOffset fromTime, DateTimeOffset toTime)
         {
             using var connection = new SQLiteConnection(ConnectionString);
             return connection.Query<CpuMetricsModel>($"SELECT time, value From cpumetrics WHERE time > @fromTime AND time < @toTime",

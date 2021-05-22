@@ -20,7 +20,7 @@ namespace MetricsAgent.Jobs
 
         public Task Execute(IJobExecutionContext context)
         {
-            int freeSpace = Convert.ToInt32(_hddCounter.NextValue());
+            long freeSpace = Convert.ToInt64(_hddCounter.NextValue());
             DateTimeOffset time = DateTimeOffset.UtcNow;
             _repository.Create(new HddMetricsModel { Time = time, Value = freeSpace });
 

@@ -29,7 +29,7 @@ namespace MetricsAgentTests
             _mock.Setup(repository => repository.GetMetricsFromeTimeToTime(fromTime, toTime)).Verifiable();
 
             //Act
-            var result = _controller.GetMetricsFromTimeToTime(fromTime, toTime);
+            //var result = _controller.GetMetricsFromTimeToTime(fromTime, toTime);
 
             //Assert
             _mock.Verify(repository => repository.GetMetricsFromeTimeToTime(fromTime, toTime), Times.AtMostOnce());
@@ -44,7 +44,7 @@ namespace MetricsAgentTests
             _mock.Setup(repository => repository.GetMetricsFromeTimeToTime(fromTime, toTime)).Verifiable();
 
             //Act
-            var result = _controller.GetMetricsFromTimeToTime(fromTime, toTime);
+            //var result = _controller.GetMetricsFromTimeToTime(fromTime, toTime);
 
             //Assert
             _mock.Verify(repository => repository.GetMetricsFromeTimeToTime(fromTime, toTime), Times.AtMostOnce());

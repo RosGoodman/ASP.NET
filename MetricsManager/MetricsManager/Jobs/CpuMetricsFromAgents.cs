@@ -32,7 +32,7 @@ namespace MetricsManager.Jobs
 
             foreach (var agent in agents)
             {
-                AllCpuMetricsApiResponse allMetrics = _client.GetAllCpuMetrics(new GetAllCpuMetricsApiRequest
+                AllCpuMetricsResponse allMetrics = _client.GetAllCpuMetricsAsync(new GetAllCpuMetricsApiRequest
                 {
                     FromTime = fromTime,
                     ToTime = toTime,

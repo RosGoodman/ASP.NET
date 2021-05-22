@@ -1,8 +1,11 @@
 ﻿using MetricsManager.Client.ApiResponses;
 using MetricsManager.Client.MetricsApiRequests;
+using MetricsManager.Models;
 using MetricsManager.Responses;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Text.Json;
 
@@ -19,7 +22,7 @@ namespace MetricsManager.Client
             _logger = logger;
         }
 
-        public AllHddMetricsResponse GetAllHddMetrics(GetAllHddMetricsApiRequest request)
+        public AllHddMetricsResponse GetAllHddMetricsAsync(GetAllHddMetricsApiRequest request)
         {
             var fromParameter = request.FromTime.ToUnixTimeSeconds();
             var toParameter = request.ToTime.ToUnixTimeSeconds();
@@ -39,17 +42,37 @@ namespace MetricsManager.Client
             return null;
         }
 
-        public AllCpuMetricsApiResponse GetAllCpuMetrics(GetAllCpuMetricsApiRequest request)
+        public AllCpuMetricsResponse GetAllCpuMetricsAsync(GetAllCpuMetricsApiRequest request)
         {
-            var fromParameter = request.FromTime.Date;
-            var toParameter = request.ToTime;
-            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"http://{request.ClientBaseAddress}/api/metrics/cpu/from/2019-01-01/to/2022-01-12");
+            string fromParameter = request.FromTime.ToString("yyyy-MM-dd HH-mm-ss");
+            string toParameter = request.ToTime.ToString("yyyy-MM-dd HH-mm-ss");
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"http://{request.ClientBaseAddress}/api/metrics/cpu/from/{fromParameter}/to/{toParameter}");
             try
             {
                 HttpResponseMessage response = _httpClient.SendAsync(httpRequest).Result;
 
                 using var responseStream = response.Content.ReadAsStreamAsync().Result;
-                return JsonSerializer.DeserializeAsync<AllCpuMetricsApiResponse>(responseStream).Result;
+
+                using var streamReader = new StreamReader(responseStream);
+                var values = streamReader.ReadToEnd();
+
+                var result = JsonSerializer.Deserialize<IList<CpuMetricsDto>>(values, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                List<CpuMetricsDto> newMetricsList = new();
+
+                foreach (var metric in result)
+                {
+                    var newMetric = new CpuMetricsDto { Time = metric.Time, Value = metric.Value };
+                    newMetricsList.Add(newMetric);
+                }
+
+                AllCpuMetricsResponse allCpuMetricsResponse = new();
+                allCpuMetricsResponse.Metrics = newMetricsList;
+
+                return allCpuMetricsResponse;
             }
             catch (Exception ex)
             {
@@ -81,7 +104,7 @@ namespace MetricsManager.Client
 
         public AllNetworkMetricsResponse GetAllNetworkMetrics(GetAllNetworkMetricsApiRequest request)
         {
-            var fromParameter = request.FromTime.ToUnixTimeSeconds();
+            var fromParameter = request.FromTime.ToUniversalTime();
             var toParameter = request.ToTime.ToUnixTimeSeconds();
             var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"http://{request.ClientBaseAddress}/api/metrics/network/from/{fromParameter}/to/{toParameter}");
             try

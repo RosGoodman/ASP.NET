@@ -72,7 +72,12 @@ namespace MetricsManager.Repositories
         {
             using var connection = new SQLiteConnection(ConnectionString);
             var result = connection.QueryFirstOrDefault<CpuMetricsModel>("SELECT * FROM cpumetrics ORDER BY time DESC LIMIT 1");
-            return (result ?? new CpuMetricsModel()).Time;
+            if (result == null)
+            {
+                result = new CpuMetricsModel();
+                result.Time = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
+            }
+            return result.Time;
         }
     }
 }
