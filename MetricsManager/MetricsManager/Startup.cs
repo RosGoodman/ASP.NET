@@ -40,7 +40,7 @@ namespace MetricsManager
             services.AddSingleton<CpuMetricsFromAgents>();
             services.AddSingleton(new JobSchedule(
                 jobType: typeof(CpuMetricsFromAgents),
-                cronExpression: "0/20 * * * * ?")); // запускать каждые 30 секунд
+                cronExpression: "0/30 * * * * ?")); // запускать каждые 30 секунд
 
             services.AddSingleton<HddMetricsFromAgents>();
             services.AddSingleton(new JobSchedule(

@@ -1,7 +1,5 @@
-﻿using MetricsManager.Client.ApiResponses;
-using MetricsManager.Client.MetricsApiRequests;
+﻿using MetricsManager.Client.MetricsApiRequests;
 using MetricsManager.Responses;
-using System.Collections.Generic;
 
 namespace MetricsManager.Client
 {

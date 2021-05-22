@@ -1,6 +1,4 @@
-﻿using MetricsManager.Client.ApiResponses;
-using MetricsManager.Client.MetricsApiRequests;
-using MetricsManager.Models;
+﻿using MetricsManager.Client.MetricsApiRequests;
 using MetricsManager.Responses;
 using Microsoft.Extensions.Logging;
 using System;
@@ -24,6 +22,10 @@ namespace MetricsManager.Client
 
         public AllHddMetricsResponse GetAllHddMetricsAsync(GetAllHddMetricsApiRequest request)
         {
+            _logger.LogInformation($"Отправка запроса на получение метрик HDD (" +
+                $"fromTime = {request.FromTime:u}," +
+                $" toTime = {request.ToTime:u})");
+
             var fromParameter = request.FromTime.ToString("u");
             var toParameter = request.ToTime.ToString("u");
 
@@ -54,6 +56,10 @@ namespace MetricsManager.Client
 
         public AllCpuMetricsResponse GetAllCpuMetricsAsync(GetAllCpuMetricsApiRequest request)
         {
+            _logger.LogInformation($"Отправка запроса на получение метрик Cpu (" +
+                $"fromTime = {request.FromTime:u}," +
+                $" toTime = {request.ToTime:u})");
+
             string fromParameter = request.FromTime.ToString("u");
             string toParameter = request.ToTime.ToString("u");
 
@@ -84,6 +90,10 @@ namespace MetricsManager.Client
 
         public AllDotNetMetricsResponse GetAllDonNetMetrics(GetAllDotNetMetricsApiRequest request)
         {
+            _logger.LogInformation($"Отправка запроса на получение метрик DotNet (" +
+                $"fromTime = {request.FromTime:u}," +
+                $" toTime = {request.ToTime:u})");
+
             var fromParameter = request.FromTime.ToString("u");
             var toParameter = request.ToTime.ToString("u");
 
@@ -114,6 +124,10 @@ namespace MetricsManager.Client
 
         public AllNetworkMetricsResponse GetAllNetworkMetrics(GetAllNetworkMetricsApiRequest request)
         {
+            _logger.LogInformation($"Отправка запроса на получение метрик Network (" +
+                $"fromTime = {request.FromTime:u}," +
+                $" toTime = {request.ToTime:u})");
+
             var fromParameter = request.FromTime.ToString("u");
             var toParameter = request.ToTime.ToString("u");
 
@@ -144,6 +158,10 @@ namespace MetricsManager.Client
 
         public AllRamMetricsResponse GetAllRamMetrics(GetAllRamMetricsApiRequest request)
         {
+            _logger.LogInformation($"Отправка запроса на получение метрик Ram (" +
+                $"fromTime = {request.FromTime:u}," +
+                $" toTime = {request.ToTime:u})");
+
             var fromParameter = request.FromTime.ToString("u");
             var toParameter = request.ToTime.ToString("u");
 

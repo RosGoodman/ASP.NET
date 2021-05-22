@@ -1,5 +1,4 @@
 ﻿using MetricsManager.Client;
-using MetricsManager.Client.ApiResponses;
 using MetricsManager.Client.MetricsApiRequests;
 using MetricsManager.Models;
 using MetricsManager.Repositories;

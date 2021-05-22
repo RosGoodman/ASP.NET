@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace MetricsManager.Client.MetricsApiRequests
 {
     public class GetAllNetworkMetricsApiRequest
