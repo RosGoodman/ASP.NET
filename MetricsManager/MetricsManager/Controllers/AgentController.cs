@@ -66,12 +66,12 @@ namespace MetricsManager.Controllers
             return Ok(metrics);
         }
 
-        [HttpPost("Name/{name}")]
-        public IActionResult CreateAgent([FromRoute] string name)
+        [HttpPost("name/{name}/address/{address}")]
+        public IActionResult CreateAgent([FromRoute] string name, [FromRoute] string address)
         {
-            _logger.LogInformation($"Запрос на создание нового агента (name = {name}).");
+            _logger.LogInformation($"Запрос на создание нового агента (name = {name}, address = {address}).");
 
-            AgentModel newAgent = new AgentModel { Name = name };
+            AgentModel newAgent = new AgentModel { Name = name, Address = address };
             _repository.Create(newAgent);
             return Ok();
         }

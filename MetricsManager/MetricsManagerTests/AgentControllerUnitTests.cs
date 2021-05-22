@@ -54,14 +54,16 @@ namespace MetricsManagerTests
         {
             //Arrange
             string name = "agent";
+            string address = "localhost:59817";
             AgentModel agent = new AgentModel();
             agent.Name = name;
+            agent.Address = address;
 
             _mock.Setup(repository => repository.Create(agent)).Verifiable();
             _controller = new AgentController(_mock.Object, _logger.Object);
 
             //Act
-            _controller.CreateAgent(name);
+            _controller.CreateAgent(name, address);
 
             //Assert
             _mock.Verify(repository => repository.Create(agent), Times.AtMostOnce());

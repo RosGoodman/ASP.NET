@@ -22,7 +22,7 @@ namespace MetricsManager.Client
         {
             var fromParameter = request.FromTime.ToUnixTimeSeconds();
             var toParameter = request.ToTime.ToUnixTimeSeconds();
-            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{request.ClientBaseAddress}/api/metrics/hdd/from/{fromParameter}/to/{toParameter}");
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"http://{request.ClientBaseAddress}/api/metrics/hdd/from/{fromParameter}/to/{toParameter}");
             try
             {
                 HttpResponseMessage response = _httpClient.SendAsync(httpRequest).Result;
@@ -42,7 +42,7 @@ namespace MetricsManager.Client
         {
             var fromParameter = request.FromTime.ToUnixTimeSeconds();
             var toParameter = request.ToTime.ToUnixTimeSeconds();
-            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{request.ClientBaseAddress}/api/metrics/cpu/from/{fromParameter}/to/{toParameter}");
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"http://{request.ClientBaseAddress}/api/metrics/cpu/from/{fromParameter}/to/{toParameter}");
             try
             {
                 HttpResponseMessage response = _httpClient.SendAsync(httpRequest).Result;
@@ -62,7 +62,7 @@ namespace MetricsManager.Client
         {
             var fromParameter = request.FromTime.ToUnixTimeSeconds();
             var toParameter = request.ToTime.ToUnixTimeSeconds();
-            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{request.ClientBaseAddress}/api/metrics/dotnet/from/{fromParameter}/to/{toParameter}");
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"http://{request.ClientBaseAddress}/api/metrics/dotnet/from/{fromParameter}/to/{toParameter}");
             try
             {
                 HttpResponseMessage response = _httpClient.SendAsync(httpRequest).Result;
@@ -82,7 +82,7 @@ namespace MetricsManager.Client
         {
             var fromParameter = request.FromTime.ToUnixTimeSeconds();
             var toParameter = request.ToTime.ToUnixTimeSeconds();
-            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{request.ClientBaseAddress}/api/metrics/network/from/{fromParameter}/to/{toParameter}");
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"http://{request.ClientBaseAddress}/api/metrics/network/from/{fromParameter}/to/{toParameter}");
             try
             {
                 HttpResponseMessage response = _httpClient.SendAsync(httpRequest).Result;
@@ -102,7 +102,7 @@ namespace MetricsManager.Client
         {
             var fromParameter = request.FromTime.ToUnixTimeSeconds();
             var toParameter = request.ToTime.ToUnixTimeSeconds();
-            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"{request.ClientBaseAddress}/api/metrics/ram/from/{fromParameter}/to/{toParameter}");
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"http://{request.ClientBaseAddress}/api/metrics/ram/from/{fromParameter}/to/{toParameter}");
             try
             {
                 HttpResponseMessage response = _httpClient.SendAsync(httpRequest).Result;

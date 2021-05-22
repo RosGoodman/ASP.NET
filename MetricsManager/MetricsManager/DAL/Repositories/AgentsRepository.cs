@@ -37,7 +37,7 @@ namespace MetricsManager.Repositories
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                return connection.QuerySingle<AgentModel>("SELECT * FROM agents WHERE id = @id",
+                return connection.QueryFirstOrDefault<AgentModel>("SELECT * FROM agents WHERE id = @id",
                 new
                 {
                     id = id
@@ -51,10 +51,11 @@ namespace MetricsManager.Repositories
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                connection.Execute("INSERT INTO agents(name) VALUES(@name)",
+                connection.Execute("INSERT INTO agents(name, address) VALUES(@name, @address)",
                     new
                     {
-                        name = model.Name
+                        name = model.Name,
+                        address = model.Address
                     });
             }
         }

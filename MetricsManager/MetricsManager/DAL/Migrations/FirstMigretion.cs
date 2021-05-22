@@ -19,6 +19,7 @@ namespace MetricsManager.DAL.Migrations
         {
             Create.Table("agents")
                 .WithColumn("id").AsInt64().PrimaryKey().Identity()
+                .WithColumn("address").AsString()
                 .WithColumn("name").AsString();
             Create.Table("cpumetrics")
                 .WithColumn("id").AsInt64().PrimaryKey().Identity()
