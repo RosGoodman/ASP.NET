@@ -65,5 +65,11 @@ namespace MetricsManager.Repositories
                         toTime = toTime.ToUnixTimeSeconds()
                     }).ToList();
         }
+        public DateTimeOffset GetLastTime()
+        {
+            using var connection = new SQLiteConnection(ConnectionString);
+            var result = connection.QueryFirstOrDefault<RamMetricsModel>("SELECT * FROM rammetrics ORDER BY time DESC LIMIT 1");
+            return (result ?? new RamMetricsModel()).Time;
+        }
     }
 }

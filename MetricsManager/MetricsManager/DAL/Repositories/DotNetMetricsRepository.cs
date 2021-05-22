@@ -54,6 +54,13 @@ namespace MetricsManager.Repositories
             }
         }
 
+        public DateTimeOffset GetLastTime()
+        {
+            using var connection = new SQLiteConnection(ConnectionString);
+            var result = connection.QueryFirstOrDefault<DotNetMetricsModel>("SELECT * FROM dotnetmetrics ORDER BY time DESC LIMIT 1");
+            return (result ?? new DotNetMetricsModel()).Time;
+        }
+
         public List<DotNetMetricsModel> GetMetricsFromeTimeToTimeFromAgent(int id, DateTimeOffset fromTime, DateTimeOffset toTime)
         {
             using var connection = new SQLiteConnection(ConnectionString);

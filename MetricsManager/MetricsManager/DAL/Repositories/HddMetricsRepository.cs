@@ -65,5 +65,11 @@ namespace MetricsManager.Repositories
                         toTime = toTime.ToUnixTimeSeconds()
                     }).ToList();
         }
+        public DateTimeOffset GetLastTime()
+        {
+            using var connection = new SQLiteConnection(ConnectionString);
+            var result = connection.QueryFirstOrDefault<HddMetricsModel>("SELECT * FROM hddmetrics ORDER BY time DESC LIMIT 1");
+            return (result ?? new HddMetricsModel()).Time;
+        }
     }
 }

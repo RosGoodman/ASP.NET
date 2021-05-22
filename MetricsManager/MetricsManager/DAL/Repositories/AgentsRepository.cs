@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using MetricsManager.DAL;
 using MetricsManager.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
@@ -56,6 +57,11 @@ namespace MetricsManager.Repositories
                         name = model.Name
                     });
             }
+        }
+
+        public DateTimeOffset GetLastTime()
+        {
+            throw new NotImplementedException();
         }
     }
 }
