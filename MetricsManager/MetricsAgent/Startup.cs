@@ -59,7 +59,7 @@ namespace MetricsAgent
 
         private void ConfigureServiceConnection(IServiceCollection services)
         {
-            const string connectionString = "Data Source=Metrics.db";
+            const string connectionString = "Data Source=Metrics.db;Version=3;Pooling=true;Max Pool Size=100;";
             var connection = new SQLiteConnection(connectionString);
             //using var command = new SQLiteCommand(connection);
             connection.Open();
