@@ -33,7 +33,7 @@ namespace MetricsManager.Repositories
                     {
                         agentid = model.AgentId,
                         value = model.Value,
-                        time = model.Time
+                        time = model.Time.ToUnixTimeSeconds()
                     });
             }
         }
@@ -55,11 +55,6 @@ namespace MetricsManager.Repositories
                 });
             }
         }
-
-        //////////////////////////////////////////////////////////////////////////
-        //В целом все работает, но что-то напутал с запросами, пока не разобрался. 
-        //Ошибка с toTime, не могу понять в чем, без него работает
-        //////////////////////////////////////////////////////////////////////////
 
         public List<CpuMetricsModel> GetMetricsFromeTimeToTimeFromAgent(long agentid, DateTimeOffset fromTime, DateTimeOffset toTime)
         {

@@ -31,7 +31,7 @@ namespace MetricsManager.Repositories
                     {
                         AgentId = model.AgentId,
                         value = model.Value,
-                        time = model.Time
+                        time = model.Time.ToUnixTimeSeconds()
                     });
             }
         }

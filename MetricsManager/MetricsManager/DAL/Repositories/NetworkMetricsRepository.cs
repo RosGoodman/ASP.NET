@@ -31,7 +31,7 @@ namespace MetricsManager.Repositories
                     {
                         AgentId = model.AgentId,
                         value = model.Value,
-                        time = model.Time
+                        time = model.Time.ToUnixTimeSeconds()
                     });
             }
         }
@@ -54,7 +54,7 @@ namespace MetricsManager.Repositories
             }
         }
 
-        public List<NetworkMetricsModel> GetMetricsFromeTimeToTimeFromAgent(long id, DateTimeOffset fromTime, DateTimeOffset toTime)
+        public List<NetworkMetricsModel> GetMetricsFromeTimeToTimeFromAgent(long agentid, DateTimeOffset fromTime, DateTimeOffset toTime)
         {
             using var connection = new SQLiteConnection(ConnectionString);
             return connection.Query<NetworkMetricsModel>($"SELECT * From networkmetrics WHERE time >= @fromTime AND time <= @toTime And agentid = @agentid",
