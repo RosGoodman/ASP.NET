@@ -56,9 +56,10 @@ namespace MetricsManager.Repositories
             }
         }
 
-        ///////////////////////////////////////////////////////////////////////////////////////
-        //В целом все работает, но что-то напутал с запросами, пока не разобрался где проблема
-        ///////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////
+        //В целом все работает, но что-то напутал с запросами, пока не разобрался. 
+        //Ошибка с toTime, не могу понять в чем, без него работает
+        //////////////////////////////////////////////////////////////////////////
 
         public List<CpuMetricsModel> GetMetricsFromeTimeToTimeFromAgent(long agentid, DateTimeOffset fromTime, DateTimeOffset toTime)
         {
@@ -66,9 +67,9 @@ namespace MetricsManager.Repositories
             return connection.Query<CpuMetricsModel>($"SELECT * From cpumetrics WHERE time >= @fromTime AND time <= @toTime AND AgentId = @agentid",
                     new
                     {
-                        agentid = agentid,
                         fromTime = fromTime.ToUnixTimeSeconds(),
-                        toTime = toTime.ToUnixTimeSeconds()
+                        toTime = toTime.ToUnixTimeSeconds(),
+                        agentid = agentid
                     }).ToList();
         }
 
