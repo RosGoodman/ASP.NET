@@ -60,7 +60,7 @@ namespace MetricsManager.Repositories
             }
         }
 
-        public DateTimeOffset GetLastTime()
+        public DateTimeOffset GetLastTime(long agentId)
         {
             throw new NotImplementedException();
         }

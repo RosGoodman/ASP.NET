@@ -26,11 +26,12 @@ namespace MetricsManager.Jobs
         public Task Execute(IJobExecutionContext context)
         {
             IList<AgentModel> agents = _agentRepository.GetAll();
-            DateTimeOffset fromTime = _repository.GetLastTime();
+            DateTimeOffset fromTime;
             DateTimeOffset toTime = DateTimeOffset.UtcNow;
 
             foreach (var agent in agents)
             {
+                fromTime = _repository.GetLastTime(agent.Id);
                 AllHddMetricsResponse allMetrics = _client.GetAllHddMetricsAsync(new GetAllHddMetricsApiRequest
                 {
                     AgentId = agent.Id,

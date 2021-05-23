@@ -65,10 +65,14 @@ namespace MetricsManager.Repositories
                         toTime = toTime.ToUnixTimeSeconds()
                     }).ToList();
         }
-        public DateTimeOffset GetLastTime()
+        public DateTimeOffset GetLastTime(long agentId)
         {
             using var connection = new SQLiteConnection(ConnectionString);
-            var result = connection.QueryFirstOrDefault<NetworkMetricsModel>("SELECT * FROM networkmetrics ORDER BY time DESC LIMIT 1");
+            var result = connection.QueryFirstOrDefault<NetworkMetricsModel>("SELECT * FROM cpumetrics ORDER BY time DESC LIMIT 1 WHERE agentid = @agentid",
+                new
+                {
+                    agentid = agentId
+                });
             return (result ?? new NetworkMetricsModel()).Time;
         }
     }

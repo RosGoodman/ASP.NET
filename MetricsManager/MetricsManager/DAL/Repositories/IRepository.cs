@@ -8,6 +8,6 @@ namespace MetricsManager.Repositories
         IList<T> GetAll();
         T GetByRecordNumb(long id, long numb);
         void Create(T item);
-        DateTimeOffset GetLastTime();
+        DateTimeOffset GetLastTime(long agentId);
     }
 }

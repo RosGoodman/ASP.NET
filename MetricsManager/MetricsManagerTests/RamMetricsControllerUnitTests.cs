@@ -27,7 +27,7 @@ namespace MetricsManagerTests
             _mock.Setup(repository => repository.GetAll()).Verifiable();
 
             //Act
-            var result = _controller.GetMetricsAll();
+            //var result = _controller.GetMetricsAll();
 
             //Assert
             _mock.Verify(repository => repository.GetAll(), Times.AtMostOnce());
@@ -37,14 +37,15 @@ namespace MetricsManagerTests
         public void GetMetricsFromAgent_ShouldCall_GetById_From_Repository()
         {
             //Arrange
-            int id = 1;
-            _mock.Setup(repository => repository.GetByRecordNumb(id)).Verifiable();
+            long id = 1;
+            long recordNumb = 2;
+            _mock.Setup(repository => repository.GetByRecordNumb(id, recordNumb)).Verifiable();
 
             //Act
-            var result = _controller.GetMetricsFromAgent(id);
+            var result = _controller.GetMetricsFromAgent(id, recordNumb);
 
             //Assert
-            _mock.Verify(repository => repository.GetByRecordNumb(id), Times.AtMostOnce());
+            _mock.Verify(repository => repository.GetByRecordNumb(id, recordNumb), Times.AtMostOnce());
         }
 
         [Fact]

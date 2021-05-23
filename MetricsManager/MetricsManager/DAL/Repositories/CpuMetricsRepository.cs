@@ -62,16 +62,20 @@ namespace MetricsManager.Repositories
             return connection.Query<CpuMetricsModel>($"SELECT * From cpumetrics WHERE time >= @fromTime AND time <= @toTime And agentid = @agentid",
                     new
                     {
-                        fromTime = fromTime,
+                        fromTime = fromTime.ToUnixTimeSeconds(),
                         toTime = toTime.ToUnixTimeSeconds(),
                         agentid = agentid
                     }).ToList();
         }
 
-        public DateTimeOffset GetLastTime()
+        public DateTimeOffset GetLastTime(long agentId)
         {
             using var connection = new SQLiteConnection(ConnectionString);
-            var result = connection.QueryFirstOrDefault<CpuMetricsModel>("SELECT * FROM cpumetrics ORDER BY time DESC LIMIT 1");
+            var result = connection.QueryFirstOrDefault<CpuMetricsModel>("SELECT * FROM cpumetrics ORDER BY time DESC LIMIT 1 WHERE agentid = @agentid",
+                new {
+                    agentid = agentId
+                });
+
             if (result == null)
             {
                 result = new CpuMetricsModel();
