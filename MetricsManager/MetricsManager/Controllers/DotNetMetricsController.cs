@@ -15,11 +15,13 @@ namespace MetricsManager.Controllers
     {
         private readonly ILogger<DotNetMetricsController> _logger;
         private readonly IDotNetMetricsRepository _repository;
+        private readonly IMapper _mapper;
 
-        public DotNetMetricsController(IDotNetMetricsRepository repository, ILogger<DotNetMetricsController> logger)
+        public DotNetMetricsController(IDotNetMetricsRepository repository, ILogger<DotNetMetricsController> logger, IMapper mapper)
         {
             _repository = repository;
             _logger = logger;
+            _mapper = mapper;
         }
 
         [HttpGet("agentId/{id}/from/{fromTime}/to/{toTime}")]
@@ -27,8 +29,6 @@ namespace MetricsManager.Controllers
         {
             _logger.LogInformation($"Запрос на получение метрик DotNet (agent Id = {id}, fromTime = {fromTime}, toTime = {toTime})");
 
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<DotNetMetricsModel, DotNetMetricsDto>());
-            var m = config.CreateMapper();
             IList<DotNetMetricsModel> metrics = _repository.GetMetricsFromeTimeToTimeFromAgent(id, fromTime, toTime);
 
             var response = new AllDotNetMetricsResponse()
@@ -38,7 +38,7 @@ namespace MetricsManager.Controllers
 
             foreach (var metric in metrics)
             {
-                response.Metrics.Add(m.Map<DotNetMetricsDto>(metric));
+                response.Metrics.Add(_mapper.Map<DotNetMetricsDto>(metric));
             }
 
             return Ok(metrics);
@@ -49,8 +49,6 @@ namespace MetricsManager.Controllers
         {
             _logger.LogInformation($"Запрос на получение данных метрик DotNet (agent Id = {id}, record numb = {numb}).");
 
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<DotNetMetricsModel, DotNetMetricsDto>());
-            var m = config.CreateMapper();
             DotNetMetricsModel metrics = _repository.GetByRecordNumb(id, numb);
 
             var response = new AllDotNetMetricsResponse()
@@ -58,7 +56,7 @@ namespace MetricsManager.Controllers
                 Metrics = new List<DotNetMetricsDto>()
             };
 
-            response.Metrics.Add(m.Map<DotNetMetricsDto>(metrics));
+            response.Metrics.Add(_mapper.Map<DotNetMetricsDto>(metrics));
 
             return Ok(metrics);
         }

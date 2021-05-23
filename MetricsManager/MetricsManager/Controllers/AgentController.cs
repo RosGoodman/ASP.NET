@@ -14,12 +14,14 @@ namespace MetricsManager.Controllers
     {
         private readonly ILogger<AgentController> _logger;
         private readonly IAgentRepository _repository;
+        private readonly IMapper _mapper;
 
-        public AgentController(IAgentRepository repository, ILogger<AgentController> logger)
+        public AgentController(IAgentRepository repository, ILogger<AgentController> logger, IMapper mapper)
         {
             _repository = repository;
             _logger = logger;
             logger.LogDebug(1, "NLog встроен в AgentController");
+            _mapper = mapper;
         }
 
         [HttpGet("all")]
@@ -27,10 +29,6 @@ namespace MetricsManager.Controllers
         {
             _logger.LogInformation($"Запрос на получение метрик CPU");
 
-            // задаем конфигурацию для мапера. Первый обобщенный параметр -- тип объекта
-            // источника, второй -- тип объекта в который перетекут данные из источника
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<AgentModel, AgentsDto>());
-            var m = config.CreateMapper();
             var metrics = _repository.GetAll();
 
             var response = new AllAgentsResponse()
@@ -41,7 +39,7 @@ namespace MetricsManager.Controllers
             foreach (var metric in metrics)
             {
                 // добавляем объекты в ответ при помощи мапера
-                response.Metrics.Add(m.Map<AgentsDto>(metric));
+                response.Metrics.Add(_mapper.Map<AgentsDto>(metric));
             }
 
             return Ok(response);
@@ -52,8 +50,6 @@ namespace MetricsManager.Controllers
         {
             _logger.LogInformation($"Запрос на получение данных агента (agent Id = {id}).");
 
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<AgentModel, AgentsDto>());
-            var m = config.CreateMapper();
             AgentModel metrics = _repository.GetById(id);
 
             var response = new AllAgentsResponse()
@@ -61,7 +57,7 @@ namespace MetricsManager.Controllers
                 Metrics = new List<AgentsDto>()
             };
             
-            response.Metrics.Add(m.Map<AgentsDto>(metrics));
+            response.Metrics.Add(_mapper.Map<AgentsDto>(metrics));
 
             return Ok(metrics);
         }

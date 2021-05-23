@@ -12,6 +12,8 @@ using Quartz.Spi;
 using System.Data.SQLite;
 using Polly;
 using System;
+using AutoMapper;
+using MetricsManager.Controllers;
 
 namespace MetricsManager
 {
@@ -21,6 +23,10 @@ namespace MetricsManager
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            var mapperConfiguration = new MapperConfiguration(mp => mp.AddProfile(new MapperProfiles()));
+            var mapper = mapperConfiguration.CreateMapper();
+            services.AddSingleton(mapper);
+
             services.AddHttpClient();
             services.AddHttpClient<IMetricsAgentClient, MetricsAgentClient>().AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(1000)));
 

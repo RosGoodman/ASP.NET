@@ -15,11 +15,13 @@ namespace MetricsManager.Controllers
     {
         private readonly ILogger<CpuMetricsController> _logger;
         private readonly ICpuMetricsRepository _repository;
+        private readonly IMapper _mapper;
 
-        public CpuMetricsController(ICpuMetricsRepository repository, ILogger<CpuMetricsController> logger)
+        public CpuMetricsController(ICpuMetricsRepository repository, ILogger<CpuMetricsController> logger, IMapper mapper)
         {
             _repository = repository;
             _logger = logger;
+            _mapper = mapper;
         }
 
         [HttpGet("agentId/{id}/from/{fromTime}/to/{toTime}")]
@@ -27,8 +29,6 @@ namespace MetricsManager.Controllers
         {
             _logger.LogInformation($"Запрос на получение метрик CPU (agent Id = {id}, fromTime = {fromTime}, toTime = {toTime})");
 
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<CpuMetricsModel, CpuMetricsDto>());
-            var m = config.CreateMapper();
             IList<CpuMetricsModel> metrics = _repository.GetMetricsFromeTimeToTimeFromAgent(id, fromTime, toTime);
 
             var response = new AllCpuMetricsResponse()
@@ -38,7 +38,7 @@ namespace MetricsManager.Controllers
 
             foreach (var metric in metrics)
             {
-                response.Metrics.Add(m.Map<CpuMetricsDto>(metric));
+                response.Metrics.Add(_mapper.Map<CpuMetricsDto>(metric));
             }
 
             return Ok(metrics);
@@ -49,8 +49,6 @@ namespace MetricsManager.Controllers
         {
             _logger.LogInformation($"Запрос на получение метрик CPU (agent Id = {id}, record numb = {numb}).");
 
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<CpuMetricsModel, CpuMetricsDto>());
-            var m = config.CreateMapper();
             CpuMetricsModel metrics = _repository.GetByRecordNumb(id, numb);
 
             var response = new AllCpuMetricsResponse()
@@ -58,7 +56,7 @@ namespace MetricsManager.Controllers
                 Metrics = new List<CpuMetricsDto>()
             };
 
-            response.Metrics.Add(m.Map<CpuMetricsDto>(metrics));
+            response.Metrics.Add(_mapper.Map<CpuMetricsDto>(metrics));
 
             return Ok(metrics);
         }

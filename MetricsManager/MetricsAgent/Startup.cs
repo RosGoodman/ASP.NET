@@ -9,6 +9,8 @@ using MetricsAgent.Jobs;
 using Quartz.Spi;
 using Quartz;
 using Quartz.Impl;
+using AutoMapper;
+using MetricsAgent.Controllers;
 
 namespace MetricsAgent
 {
@@ -17,6 +19,10 @@ namespace MetricsAgent
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var mapperConfiguration = new MapperConfiguration(mp => mp.AddProfile(new MapperProfiles()));
+            var mapper = mapperConfiguration.CreateMapper();
+            services.AddSingleton(mapper);
+
             services.AddControllers();
             ConfigureServiceConnection(services);
             services.AddSingleton<ICpuMetricsRepository, CpuMetricsRepository>();

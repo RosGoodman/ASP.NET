@@ -15,11 +15,13 @@ namespace MetricsAgent.Controllers
     {
         private readonly ILogger<HddMetricsAgentController> _logger;
         private readonly IHddMetricsRepository _repository;
+        private readonly IMapper _mapper;
 
-        public HddMetricsAgentController(IHddMetricsRepository repository, ILogger<HddMetricsAgentController> logger)
+        public HddMetricsAgentController(IHddMetricsRepository repository, ILogger<HddMetricsAgentController> logger, IMapper mapper)
         {
             _repository = repository;
             _logger = logger;
+            _mapper = mapper;
         }
 
         [HttpGet("from/{fromTime}/to/{toTime}")]
@@ -29,8 +31,6 @@ namespace MetricsAgent.Controllers
                 $"fromTime = {request.FromTime:u}," +
                 $" toTime = {request.ToTime:u})");
 
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<HddMetricsModel, HddMetricsDto>());
-            var m = config.CreateMapper();
             IList<HddMetricsModel> metrics = _repository.GetMetricsFromeTimeToTime(request.FromTime, request.ToTime);
 
             var response = new AllHddMetricsResponse()
@@ -40,7 +40,7 @@ namespace MetricsAgent.Controllers
 
             foreach (var metric in metrics)
             {
-                response.Metrics.Add(m.Map<HddMetricsDto>(metric));
+                response.Metrics.Add(_mapper.Map<HddMetricsDto>(metric));
             }
 
             return Ok(metrics);

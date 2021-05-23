@@ -15,11 +15,13 @@ namespace MetricsManager.Controllers
     {
         private readonly ILogger<NetworkMetricsController> _logger;
         private readonly INetworkMetricsRepository _repository;
+        private readonly IMapper _mapper;
 
-        public NetworkMetricsController(INetworkMetricsRepository repository, ILogger<NetworkMetricsController> logger)
+        public NetworkMetricsController(INetworkMetricsRepository repository, ILogger<NetworkMetricsController> logger, IMapper mapper)
         {
             _repository = repository;
             _logger = logger;
+            _mapper = mapper;
         }
 
         [HttpGet("agentId/{id}/from/{fromTime}/to/{toTime}")]
@@ -27,8 +29,6 @@ namespace MetricsManager.Controllers
         {
             _logger.LogInformation($"Запрос на получение метрик Network (agent Id = {id}, fromTime = {fromTime}, toTime = {toTime})");
 
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<NetworkMetricsModel, NetworkMetricsDto>());
-            var m = config.CreateMapper();
             IList<NetworkMetricsModel> metrics = _repository.GetMetricsFromeTimeToTimeFromAgent(id, fromTime, toTime);
 
             var response = new AllNetworkMetricsResponse()
@@ -38,7 +38,7 @@ namespace MetricsManager.Controllers
 
             foreach (var metric in metrics)
             {
-                response.Metrics.Add(m.Map<NetworkMetricsDto>(metric));
+                response.Metrics.Add(_mapper.Map<NetworkMetricsDto>(metric));
             }
 
             return Ok(metrics);
@@ -49,8 +49,6 @@ namespace MetricsManager.Controllers
         {
             _logger.LogInformation($"Запрос на получение метрик Network (agent Id = {id}, record numb = {numb}).");
 
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<NetworkMetricsModel, NetworkMetricsDto>());
-            var m = config.CreateMapper();
             NetworkMetricsModel metrics = _repository.GetByRecordNumb(id, numb);
 
             var response = new AllNetworkMetricsResponse()
@@ -58,7 +56,7 @@ namespace MetricsManager.Controllers
                 Metrics = new List<NetworkMetricsDto>()
             };
 
-            response.Metrics.Add(m.Map<NetworkMetricsDto>(metrics));
+            response.Metrics.Add(_mapper.Map<NetworkMetricsDto>(metrics));
 
             return Ok(metrics);
         }

@@ -15,11 +15,13 @@ namespace MetricsAgent.Controllers
     {
         private readonly ILogger<RamMetricsAgentController> _logger;
         private readonly IRamMetricsRepository _repository;
+        private readonly IMapper _mapper;
 
-        public RamMetricsAgentController(IRamMetricsRepository repository, ILogger<RamMetricsAgentController> logger)
+        public RamMetricsAgentController(IRamMetricsRepository repository, ILogger<RamMetricsAgentController> logger, IMapper mapper)
         {
             _repository = repository;
             _logger = logger;
+            _mapper = mapper;
         }
 
         [HttpGet("from/{fromTime}/to/{toTime}")]
@@ -29,8 +31,6 @@ namespace MetricsAgent.Controllers
                 $"fromTime = {request.FromTime:u}," +
                 $" toTime = {request.ToTime:u})");
 
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<RamMetricsModel, RamMetricsDto>());
-            var m = config.CreateMapper();
             IList<RamMetricsModel> metrics = _repository.GetMetricsFromeTimeToTime(request.FromTime, request.ToTime);
 
             var response = new AllRamMetricsResponse()
@@ -40,7 +40,7 @@ namespace MetricsAgent.Controllers
 
             foreach (var metric in metrics)
             {
-                response.Metrics.Add(m.Map<RamMetricsDto>(metric));
+                response.Metrics.Add(_mapper.Map<RamMetricsDto>(metric));
             }
 
             return Ok(metrics);

@@ -15,11 +15,13 @@ namespace MetricsManager.Controllers
     {
         private readonly ILogger<RamMetricsController> _logger;
         private readonly IRamMetricsRepository _repository;
+        private readonly IMapper _mapper;
 
-        public RamMetricsController(IRamMetricsRepository repository, ILogger<RamMetricsController> logger)
+        public RamMetricsController(IRamMetricsRepository repository, ILogger<RamMetricsController> logger, IMapper mapper)
         {
             _repository = repository;
             _logger = logger;
+            _mapper = mapper;
         }
 
         [HttpGet("agentId/{id}/from/{fromTime}/to/{toTime}")]
@@ -27,8 +29,6 @@ namespace MetricsManager.Controllers
         {
             _logger.LogInformation($"Запрос на получение метрик RAM (agent Id = {id}, fromTime = {fromTime}, toTime = {toTime})");
 
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<RamMetricsModel, RamMetricsDto>());
-            var m = config.CreateMapper();
             IList<RamMetricsModel> metrics = _repository.GetMetricsFromeTimeToTimeFromAgent(id, fromTime, toTime);
 
             var response = new AllRamMetricsResponse()
@@ -38,7 +38,7 @@ namespace MetricsManager.Controllers
 
             foreach (var metric in metrics)
             {
-                response.Metrics.Add(m.Map<RamMetricsDto>(metric));
+                response.Metrics.Add(_mapper.Map<RamMetricsDto>(metric));
             }
 
             return Ok(metrics);
@@ -49,8 +49,6 @@ namespace MetricsManager.Controllers
         {
             _logger.LogInformation($"Запрос на получение метрик RAM (agent Id = {id}, record numb = {numb}).");
 
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<RamMetricsModel, RamMetricsDto>());
-            var m = config.CreateMapper();
             RamMetricsModel metrics = _repository.GetByRecordNumb(id, numb);
 
             var response = new AllRamMetricsResponse()
@@ -58,7 +56,7 @@ namespace MetricsManager.Controllers
                 Metrics = new List<RamMetricsDto>()
             };
 
-            response.Metrics.Add(m.Map<RamMetricsDto>(metrics));
+            response.Metrics.Add(_mapper.Map<RamMetricsDto>(metrics));
 
             return Ok(metrics);
         }

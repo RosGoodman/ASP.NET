@@ -15,11 +15,13 @@ namespace MetricsAgent.Controllers
     {
         private readonly ILogger<CpuMetricsAgentController> _logger;
         private readonly ICpuMetricsRepository _repository;
+        private readonly IMapper _mapper;
 
-        public CpuMetricsAgentController(ICpuMetricsRepository repository, ILogger<CpuMetricsAgentController> logger)
+        public CpuMetricsAgentController(ICpuMetricsRepository repository, ILogger<CpuMetricsAgentController> logger, IMapper mapper)
         {
             _repository = repository;
             _logger = logger;
+            _mapper = mapper;
         }
 
         [HttpGet("greeting")]
@@ -35,8 +37,6 @@ namespace MetricsAgent.Controllers
                 $"fromTime = {request.FromTime:u}," +
                 $" toTime = {request.ToTime:u})");
 
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<CpuMetricsModel, CpuMetricsDto>());
-            var m = config.CreateMapper();
             IList<CpuMetricsModel> metrics = _repository.GetMetricsFromeTimeToTime(request.FromTime, request.ToTime);
 
             var response = new AllCpuMetricsResponse()
@@ -46,7 +46,7 @@ namespace MetricsAgent.Controllers
 
             foreach (var metric in metrics)
             {
-                response.Metrics.Add(m.Map<CpuMetricsDto>(metric));
+                response.Metrics.Add(_mapper.Map<CpuMetricsDto>(metric));
             }
 
             return Ok(metrics);

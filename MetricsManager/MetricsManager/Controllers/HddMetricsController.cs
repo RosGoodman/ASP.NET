@@ -15,11 +15,13 @@ namespace MetricsManager.Controllers
     {
         private readonly ILogger<HddMetricsController> _logger;
         private readonly IHddMetricsRepository _repository;
+        private readonly IMapper _mapper;
 
-        public HddMetricsController(IHddMetricsRepository repository, ILogger<HddMetricsController> logger)
+        public HddMetricsController(IHddMetricsRepository repository, ILogger<HddMetricsController> logger, IMapper mapper)
         {
             _repository = repository;
             _logger = logger;
+            _mapper = mapper;
         }
 
         [HttpGet("agentId/{id}/from/{fromTime}/to/{toTime}")]
@@ -27,8 +29,6 @@ namespace MetricsManager.Controllers
         {
             _logger.LogInformation($"Запрос на получение метрик HDD (agent Id = {id}, fromTime = {fromTime}, toTime = {toTime})");
 
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<HddMetricsModel, HddMetricsDto>());
-            var m = config.CreateMapper();
             IList<HddMetricsModel> metrics = _repository.GetMetricsFromeTimeToTimeFromAgent(id, fromTime, toTime);
 
             var response = new AllHddMetricsResponse()
@@ -38,7 +38,7 @@ namespace MetricsManager.Controllers
 
             foreach (var metric in metrics)
             {
-                response.Metrics.Add(m.Map<HddMetricsDto>(metric));
+                response.Metrics.Add(_mapper.Map<HddMetricsDto>(metric));
             }
 
             return Ok(metrics);
@@ -49,8 +49,6 @@ namespace MetricsManager.Controllers
         {
             _logger.LogInformation($"Запрос на получение данных метрик HDD (agent Id = {id}, record numb = {numb}).");
 
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<HddMetricsModel, HddMetricsDto>());
-            var m = config.CreateMapper();
             HddMetricsModel metrics = _repository.GetByRecordNumb(id, numb);
 
             var response = new AllHddMetricsResponse()
@@ -58,7 +56,7 @@ namespace MetricsManager.Controllers
                 Metrics = new List<HddMetricsDto>()
             };
 
-            response.Metrics.Add(m.Map<HddMetricsDto>(metrics));
+            response.Metrics.Add(_mapper.Map<HddMetricsDto>(metrics));
 
             return Ok(metrics);
         }
