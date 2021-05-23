@@ -56,13 +56,17 @@ namespace MetricsManager.Repositories
             }
         }
 
+        ///////////////////////////////////////////////////////////////////////////////////////
+        //В целом все работает, но что-то напутал с запросами, пока не разобрался где проблема
+        ///////////////////////////////////////////////////////////////////////////////////////
+
         public List<CpuMetricsModel> GetMetricsFromeTimeToTimeFromAgent(long agentid, DateTimeOffset fromTime, DateTimeOffset toTime)
         {
             using var connection = new SQLiteConnection(ConnectionString);
-            return connection.Query<CpuMetricsModel>($"SELECT * From cpumetrics WHERE time > @fromTime AND time < @toTime AND agentid = @agentid",
+            return connection.Query<CpuMetricsModel>($"SELECT * From cpumetrics WHERE time >= @fromTime AND time <= @toTime AND AgentId = @agentid",
                     new
                     {
-                        AgentId = agentid,
+                        agentid = agentid,
                         fromTime = fromTime.ToUnixTimeSeconds(),
                         toTime = toTime.ToUnixTimeSeconds()
                     }).ToList();
