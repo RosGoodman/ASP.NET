@@ -10,7 +10,7 @@ namespace MetricsManager.Repositories
 {
     public interface IDotNetMetricsRepository : IRepository<DotNetMetricsModel>
     {
-        List<DotNetMetricsModel> GetMetricsFromeTimeToTimeFromAgent(int id, DateTimeOffset fromTime, DateTimeOffset toTime);
+        List<DotNetMetricsModel> GetMetricsFromeTimeToTimeFromAgent(long id, DateTimeOffset fromTime, DateTimeOffset toTime);
     }
 
     public class DotNetMetricsRepository : IDotNetMetricsRepository
@@ -42,14 +42,14 @@ namespace MetricsManager.Repositories
             return connection.Query<DotNetMetricsModel>("SELECT * FROM dotnetmetrics").ToList();
         }
 
-        public DotNetMetricsModel GetById(int id)
+        public DotNetMetricsModel GetByRecordNumb(long id, long numb)
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                return connection.QuerySingle<DotNetMetricsModel>("SELECT * FROM dotnetmetrics WHERE id = @id",
+                return connection.QuerySingle<DotNetMetricsModel>("SELECT * FROM dotnetmetrics WHERE AgentId = @id",
                 new
                 {
-                    id = id
+                    AgentId = id
                 });
             }
         }
@@ -61,13 +61,13 @@ namespace MetricsManager.Repositories
             return (result ?? new DotNetMetricsModel()).Time;
         }
 
-        public List<DotNetMetricsModel> GetMetricsFromeTimeToTimeFromAgent(int id, DateTimeOffset fromTime, DateTimeOffset toTime)
+        public List<DotNetMetricsModel> GetMetricsFromeTimeToTimeFromAgent(long id, DateTimeOffset fromTime, DateTimeOffset toTime)
         {
             using var connection = new SQLiteConnection(ConnectionString);
-            return connection.Query<DotNetMetricsModel>($"SELECT * From dotnetmetrics WHERE time > @fromTime AND time < @toTime And id = @id",
+            return connection.Query<DotNetMetricsModel>($"SELECT * From dotnetmetrics WHERE time > @fromTime AND time < @toTime And AgentId = @id",
                     new
                     {
-                        id = id,
+                        AgentId = id,
                         fromTime = fromTime.ToUnixTimeSeconds(),
                         toTime = toTime.ToUnixTimeSeconds()
                     }).ToList();

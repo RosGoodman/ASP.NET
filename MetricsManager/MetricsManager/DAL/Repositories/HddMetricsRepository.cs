@@ -10,7 +10,7 @@ namespace MetricsManager.Repositories
 {
     public interface IHddMetricsRepository : IRepository<HddMetricsModel>
     {
-        List<HddMetricsModel> GetMetricsFromeTimeToTimeFromAgent(int id, DateTimeOffset fromTime, DateTimeOffset toTime);
+        List<HddMetricsModel> GetMetricsFromeTimeToTimeFromAgent(long id, DateTimeOffset fromTime, DateTimeOffset toTime);
     }
 
     public class HddMetricsRepository : IHddMetricsRepository
@@ -42,25 +42,25 @@ namespace MetricsManager.Repositories
             return connection.Query<HddMetricsModel>("SELECT * FROM hddmetrics").ToList();
         }
 
-        public HddMetricsModel GetById(int id)
+        public HddMetricsModel GetByRecordNumb(long id, long numb)
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                return connection.QuerySingle<HddMetricsModel>("SELECT * FROM hddmetrics WHERE id = @id",
+                return connection.QuerySingle<HddMetricsModel>("SELECT * FROM hddmetrics WHERE AgentId = @id",
                 new
                 {
-                    id = id
+                    AgentId = id
                 });
             }
         }
 
-        public List<HddMetricsModel> GetMetricsFromeTimeToTimeFromAgent(int id, DateTimeOffset fromTime, DateTimeOffset toTime)
+        public List<HddMetricsModel> GetMetricsFromeTimeToTimeFromAgent(long id, DateTimeOffset fromTime, DateTimeOffset toTime)
         {
             using var connection = new SQLiteConnection(ConnectionString);
-            return connection.Query<HddMetricsModel>($"SELECT * From hddmetrics WHERE time > @fromTime AND time < @toTime And id = @id",
+            return connection.Query<HddMetricsModel>($"SELECT * From hddmetrics WHERE time > @fromTime AND time < @toTime And AgentId = @id",
                     new
                     {
-                        id = id,
+                        AgentId = id,
                         fromTime = fromTime.ToUnixTimeSeconds(),
                         toTime = toTime.ToUnixTimeSeconds()
                     }).ToList();

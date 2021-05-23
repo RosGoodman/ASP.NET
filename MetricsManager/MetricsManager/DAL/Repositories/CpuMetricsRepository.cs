@@ -12,7 +12,7 @@ namespace MetricsManager.Repositories
     // необходим, чтобы проверить работу репозитория на тесте-заглушке
     public interface ICpuMetricsRepository : IRepository<CpuMetricsModel>
     {
-        List<CpuMetricsModel> GetMetricsFromeTimeToTimeFromAgent(int id, DateTimeOffset fromTime, DateTimeOffset toTime);
+        List<CpuMetricsModel> GetMetricsFromeTimeToTimeFromAgent(long id, DateTimeOffset fromTime, DateTimeOffset toTime);
     }
 
     public class CpuMetricsRepository : ICpuMetricsRepository
@@ -28,10 +28,10 @@ namespace MetricsManager.Repositories
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                connection.Execute("INSERT INTO cpumetrics(AgentId, value, time) VALUES(@AgentId, @value, @time)",
+                connection.Execute("INSERT INTO cpumetrics(agentid, value, time) VALUES(@agentid, @value, @time)",
                     new
                     {
-                        AgentId = model.AgentId,
+                        agentid = model.AgentId,
                         value = model.Value,
                         time = model.Time
                     });
@@ -44,25 +44,25 @@ namespace MetricsManager.Repositories
             return connection.Query<CpuMetricsModel>("SELECT * FROM cpumetrics").ToList();
         }
 
-        public CpuMetricsModel GetById(int id)
+        public CpuMetricsModel GetByRecordNumb(long id, long recordNumb)
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                return connection.QuerySingle<CpuMetricsModel>("SELECT * FROM cpumetrics WHERE id = @id",
-                new
+                return connection.QueryFirstOrDefault<CpuMetricsModel>("SELECT * From cpumetrics WHERE agentid = @agentid AND id = @id", new
                 {
-                    id = id
+                    AgentId = id,
+                    id = recordNumb
                 });
             }
         }
 
-        public List<CpuMetricsModel> GetMetricsFromeTimeToTimeFromAgent(int id, DateTimeOffset fromTime, DateTimeOffset toTime)
+        public List<CpuMetricsModel> GetMetricsFromeTimeToTimeFromAgent(long agentid, DateTimeOffset fromTime, DateTimeOffset toTime)
         {
             using var connection = new SQLiteConnection(ConnectionString);
-            return connection.Query<CpuMetricsModel>($"SELECT * From cpumetrics WHERE time > @fromTime AND time < @toTime And id = @id",
+            return connection.Query<CpuMetricsModel>($"SELECT * From cpumetrics WHERE time > @fromTime AND time < @toTime AND agentid = @agentid",
                     new
                     {
-                        id = id,
+                        AgentId = agentid,
                         fromTime = fromTime.ToUnixTimeSeconds(),
                         toTime = toTime.ToUnixTimeSeconds()
                     }).ToList();

@@ -10,7 +10,7 @@ namespace MetricsManager.Repositories
 {
     public interface IAgentRepository : IRepository<AgentModel>
     {
-
+        AgentModel GetById(long id);
     }
 
     public class AgentsRepository : IAgentRepository
@@ -33,7 +33,7 @@ namespace MetricsManager.Repositories
         /// <summary>Получить агента по id.</summary>
         /// <param name="id">id агента.</param>
         /// <returns>Искомый агент или null.</returns>
-        public AgentModel GetById(int id)
+        public AgentModel GetById(long id)
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
@@ -61,6 +61,11 @@ namespace MetricsManager.Repositories
         }
 
         public DateTimeOffset GetLastTime()
+        {
+            throw new NotImplementedException();
+        }
+
+        public AgentModel GetByRecordNumb(long id, long numb)
         {
             throw new NotImplementedException();
         }

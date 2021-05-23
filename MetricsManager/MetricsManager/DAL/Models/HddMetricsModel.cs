@@ -6,8 +6,6 @@ namespace MetricsManager.Models
     {
         public int AgentId { get; set; }
 
-        public int Id { get; set; }
-
         public long Value { get; set; }
 
         public DateTimeOffset Time { get; set; }

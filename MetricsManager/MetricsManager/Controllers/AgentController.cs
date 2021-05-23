@@ -50,7 +50,7 @@ namespace MetricsManager.Controllers
         [HttpGet("AgentId/{id}")]
         public IActionResult GetAgentById([FromRoute]int id)
         {
-            _logger.LogInformation($"Запрос на получение данных агента (id = {id}).");
+            _logger.LogInformation($"Запрос на получение данных агента (agent Id = {id}).");
 
             var config = new MapperConfiguration(cfg => cfg.CreateMap<AgentModel, AgentsDto>());
             var m = config.CreateMapper();

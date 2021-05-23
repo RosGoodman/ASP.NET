@@ -6,7 +6,7 @@ namespace MetricsManager.Repositories
     public interface IRepository<T> where T : class
     {
         IList<T> GetAll();
-        T GetById(int id);
+        T GetByRecordNumb(long id, long numb);
         void Create(T item);
         DateTimeOffset GetLastTime();
     }

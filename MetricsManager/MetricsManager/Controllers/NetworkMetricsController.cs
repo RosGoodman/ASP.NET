@@ -25,7 +25,7 @@ namespace MetricsManager.Controllers
         [HttpGet("agentId/{id}/from/{fromTime}/to/{toTime}")]
         public IActionResult GetMetricsFromAgent([FromRoute] int id, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
-            _logger.LogInformation($"Запрос на получение метрик Network (id = {id}, fromTime = {fromTime}, toTime = {toTime})");
+            _logger.LogInformation($"Запрос на получение метрик Network (agent Id = {id}, fromTime = {fromTime}, toTime = {toTime})");
 
             var config = new MapperConfiguration(cfg => cfg.CreateMap<NetworkMetricsModel, NetworkMetricsDto>());
             var m = config.CreateMapper();
@@ -44,14 +44,14 @@ namespace MetricsManager.Controllers
             return Ok(metrics);
         }
 
-        [HttpGet("agentId/{id}")]
-        public IActionResult GetMetricsFromAgent([FromRoute] int id)
+        [HttpGet("agentId/{id}/recordNumb/{numb}")]
+        public IActionResult GetMetricsFromAgent([FromRoute] long id, [FromRoute] long numb)
         {
-            _logger.LogInformation($"Запрос на получение метрик Network (id = {id}).");
+            _logger.LogInformation($"Запрос на получение метрик Network (agent Id = {id}, record numb = {numb}).");
 
             var config = new MapperConfiguration(cfg => cfg.CreateMap<NetworkMetricsModel, NetworkMetricsDto>());
             var m = config.CreateMapper();
-            NetworkMetricsModel metrics = _repository.GetById(id);
+            NetworkMetricsModel metrics = _repository.GetByRecordNumb(id, numb);
 
             var response = new AllNetworkMetricsResponse()
             {

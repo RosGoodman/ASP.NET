@@ -38,13 +38,13 @@ namespace MetricsManagerTests
         {
             //Arrange
             int id = 1;
-            _mock.Setup(repository => repository.GetById(id)).Verifiable();
+            _mock.Setup(repository => repository.GetByRecordNumb(id)).Verifiable();
 
             //Act
             var result = _controller.GetMetricsFromAgent(id);
 
             //Assert
-            _mock.Verify(repository => repository.GetById(id), Times.AtMostOnce());
+            _mock.Verify(repository => repository.GetByRecordNumb(id), Times.AtMostOnce());
         }
 
         [Fact]

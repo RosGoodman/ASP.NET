@@ -23,27 +23,27 @@ namespace MetricsManager.DAL.Migrations
                 .WithColumn("name").AsString();
             Create.Table("cpumetrics")
                 .WithColumn("id").AsInt64().PrimaryKey().Identity()
-                .WithColumn("AgentId").AsInt64()
+                .WithColumn("agentid").AsInt64()
                 .WithColumn("value").AsInt32()
                 .WithColumn("time").AsInt64();
             Create.Table("dotnetmetrics")
                 .WithColumn("id").AsInt64().PrimaryKey().Identity()
-                .WithColumn("AgentId").AsInt64()
+                .WithColumn("agentid").AsInt64()
                 .WithColumn("value").AsInt32()
                 .WithColumn("time").AsInt64();
             Create.Table("hddmetrics")
                 .WithColumn("id").AsInt64().PrimaryKey().Identity()
-                .WithColumn("AgentId").AsInt64()
+                .WithColumn("agentid").AsInt64()
                 .WithColumn("value").AsInt64()
                 .WithColumn("time").AsInt64();
             Create.Table("networkmetrics")
                 .WithColumn("id").AsInt64().PrimaryKey().Identity()
-                .WithColumn("AgentId").AsInt64()
+                .WithColumn("agentid").AsInt64()
                 .WithColumn("value").AsInt32()
                 .WithColumn("time").AsInt64();
             Create.Table("rammetrics")
                 .WithColumn("id").AsInt64().PrimaryKey().Identity()
-                .WithColumn("AgentId").AsInt64()
+                .WithColumn("agentid").AsInt64()
                 .WithColumn("value").AsInt32()
                 .WithColumn("time").AsInt64();
         }

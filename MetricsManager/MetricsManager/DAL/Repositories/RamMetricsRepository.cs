@@ -10,7 +10,7 @@ namespace MetricsManager.Repositories
 {
     public interface IRamMetricsRepository : IRepository<RamMetricsModel>
     {
-        List<RamMetricsModel> GetMetricsFromeTimeToTimeFromAgent(int id, DateTimeOffset fromTime, DateTimeOffset toTime);
+        List<RamMetricsModel> GetMetricsFromeTimeToTimeFromAgent(long id, DateTimeOffset fromTime, DateTimeOffset toTime);
     }
 
     public class RamMetricsRepository : IRamMetricsRepository
@@ -42,25 +42,25 @@ namespace MetricsManager.Repositories
             return connection.Query<RamMetricsModel>("SELECT * FROM rammetrics").ToList();
         }
 
-        public RamMetricsModel GetById(int id)
+        public RamMetricsModel GetByRecordNumb(long id, long numb)
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                return connection.QuerySingle<RamMetricsModel>("SELECT * FROM rammetrics WHERE id = @id",
+                return connection.QuerySingle<RamMetricsModel>("SELECT * FROM rammetrics WHERE AgentId = @id",
                 new
                 {
-                    id = id
+                    AgentId = id
                 });
             }
         }
 
-        public List<RamMetricsModel> GetMetricsFromeTimeToTimeFromAgent(int id, DateTimeOffset fromTime, DateTimeOffset toTime)
+        public List<RamMetricsModel> GetMetricsFromeTimeToTimeFromAgent(long id, DateTimeOffset fromTime, DateTimeOffset toTime)
         {
             using var connection = new SQLiteConnection(ConnectionString);
-            return connection.Query<RamMetricsModel>($"SELECT * From rammetrics WHERE time > @fromTime AND time < @toTime And id = @id",
+            return connection.Query<RamMetricsModel>($"SELECT * From rammetrics WHERE time > @fromTime AND time < @toTime And AgentId = @id",
                     new
                     {
-                        id = id,
+                        AgentId = id,
                         fromTime = fromTime.ToUnixTimeSeconds(),
                         toTime = toTime.ToUnixTimeSeconds()
                     }).ToList();

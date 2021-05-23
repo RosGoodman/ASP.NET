@@ -1,4 +1,5 @@
-﻿using MetricsManager.Client.MetricsApiRequests;
+﻿
+using MetricsManager.Client.MetricsApiRequests;
 using MetricsManager.Responses;
 using Microsoft.Extensions.Logging;
 using System;
