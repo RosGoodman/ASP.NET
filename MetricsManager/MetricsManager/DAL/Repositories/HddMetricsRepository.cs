@@ -54,13 +54,13 @@ namespace MetricsManager.Repositories
             }
         }
 
-        public List<HddMetricsModel> GetMetricsFromeTimeToTimeFromAgent(long id, DateTimeOffset fromTime, DateTimeOffset toTime)
+        public List<HddMetricsModel> GetMetricsFromeTimeToTimeFromAgent(long agentid, DateTimeOffset fromTime, DateTimeOffset toTime)
         {
             using var connection = new SQLiteConnection(ConnectionString);
-            return connection.Query<HddMetricsModel>($"SELECT * From hddmetrics WHERE time >= @fromTime AND time <= @toTime And AgentId = @id",
+            return connection.Query<HddMetricsModel>($"SELECT * From hddmetrics WHERE time >= @fromTime AND time <= @toTime And agentid = @agentid",
                     new
                     {
-                        AgentId = id,
+                        agentid = agentid,
                         fromTime = fromTime.ToUnixTimeSeconds(),
                         toTime = toTime.ToUnixTimeSeconds()
                     }).ToList();

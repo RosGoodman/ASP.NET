@@ -64,10 +64,10 @@ namespace MetricsManager.Repositories
         public List<CpuMetricsModel> GetMetricsFromeTimeToTimeFromAgent(long agentid, DateTimeOffset fromTime, DateTimeOffset toTime)
         {
             using var connection = new SQLiteConnection(ConnectionString);
-            return connection.Query<CpuMetricsModel>($"SELECT * From cpumetrics WHERE time >= @fromTime AND time <= @toTime AND AgentId = @agentid",
+            return connection.Query<CpuMetricsModel>($"SELECT * From cpumetrics WHERE time >= @fromTime AND time <= @toTime And agentid = @agentid",
                     new
                     {
-                        fromTime = fromTime.ToUnixTimeSeconds(),
+                        fromTime = fromTime,
                         toTime = toTime.ToUnixTimeSeconds(),
                         agentid = agentid
                     }).ToList();

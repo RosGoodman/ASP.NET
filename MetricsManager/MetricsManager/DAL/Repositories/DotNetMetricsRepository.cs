@@ -61,13 +61,13 @@ namespace MetricsManager.Repositories
             return (result ?? new DotNetMetricsModel()).Time;
         }
 
-        public List<DotNetMetricsModel> GetMetricsFromeTimeToTimeFromAgent(long id, DateTimeOffset fromTime, DateTimeOffset toTime)
+        public List<DotNetMetricsModel> GetMetricsFromeTimeToTimeFromAgent(long agentid, DateTimeOffset fromTime, DateTimeOffset toTime)
         {
             using var connection = new SQLiteConnection(ConnectionString);
-            return connection.Query<DotNetMetricsModel>($"SELECT * From dotnetmetrics WHERE time >= @fromTime AND time <= @toTime And AgentId = @id",
+            return connection.Query<DotNetMetricsModel>($"SELECT * From dotnetmetrics WHERE time >= @fromTime AND time <= @toTime AND agentid = @agentid",
                     new
                     {
-                        AgentId = id,
+                        agentid = agentid,
                         fromTime = fromTime.ToUnixTimeSeconds(),
                         toTime = toTime.ToUnixTimeSeconds()
                     }).ToList();
