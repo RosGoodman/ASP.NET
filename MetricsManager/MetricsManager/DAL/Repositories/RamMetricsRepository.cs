@@ -42,14 +42,14 @@ namespace MetricsManager.Repositories
             return connection.Query<RamMetricsModel>("SELECT * FROM rammetrics").ToList();
         }
 
-        public RamMetricsModel GetByRecordNumb(long id, long numb)
+        public RamMetricsModel GetByRecordNumb(long id, long recordNumb)
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                return connection.QuerySingle<RamMetricsModel>("SELECT * FROM rammetrics WHERE AgentId = @id",
-                new
+                return connection.QuerySingle<RamMetricsModel>("SELECT * FROM rammetrics WHERE agentid = @agentid AND id = @id", new
                 {
-                    AgentId = id
+                    AgentId = id,
+                    id = recordNumb
                 });
             }
         }
@@ -68,7 +68,7 @@ namespace MetricsManager.Repositories
         public DateTimeOffset GetLastTime(long agentId)
         {
             using var connection = new SQLiteConnection(ConnectionString);
-            var result = connection.QueryFirstOrDefault<RamMetricsModel>("SELECT * FROM cpumetrics ORDER BY time DESC LIMIT 1 WHERE agentid = @agentid",
+            var result = connection.QueryFirstOrDefault<RamMetricsModel>("SELECT max(time) FROM rammetrics WHERE agentid = @agentid",
                 new
                 {
                     agentid = agentId

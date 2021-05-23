@@ -42,14 +42,14 @@ namespace MetricsManager.Repositories
             return connection.Query<NetworkMetricsModel>("SELECT * FROM networkmetrics").ToList();
         }
 
-        public NetworkMetricsModel GetByRecordNumb(long id, long numb)
+        public NetworkMetricsModel GetByRecordNumb(long id, long recordNumb)
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                return connection.QuerySingle<NetworkMetricsModel>("SELECT * FROM networkmetrics WHERE AgentId = @id",
-                new
+                return connection.QuerySingle<NetworkMetricsModel>("SELECT * FROM networkmetrics WHERE agentid = @agentid AND id = @id", new
                 {
-                    AgentId = id
+                    AgentId = id,
+                    id = recordNumb
                 });
             }
         }
@@ -68,7 +68,7 @@ namespace MetricsManager.Repositories
         public DateTimeOffset GetLastTime(long agentId)
         {
             using var connection = new SQLiteConnection(ConnectionString);
-            var result = connection.QueryFirstOrDefault<NetworkMetricsModel>("SELECT * FROM cpumetrics ORDER BY time DESC LIMIT 1 WHERE agentid = @agentid",
+            var result = connection.QueryFirstOrDefault<NetworkMetricsModel>("SELECT max(time) FROM networkmetrics WHERE agentid = @agentid",
                 new
                 {
                     agentid = agentId

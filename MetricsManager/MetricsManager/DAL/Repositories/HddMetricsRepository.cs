@@ -42,14 +42,14 @@ namespace MetricsManager.Repositories
             return connection.Query<HddMetricsModel>("SELECT * FROM hddmetrics").ToList();
         }
 
-        public HddMetricsModel GetByRecordNumb(long id, long numb)
+        public HddMetricsModel GetByRecordNumb(long id, long recordNumb)
         {
             using (var connection = new SQLiteConnection(ConnectionString))
             {
-                return connection.QuerySingle<HddMetricsModel>("SELECT * FROM hddmetrics WHERE AgentId = @id",
-                new
+                return connection.QuerySingle<HddMetricsModel>("SELECT * FROM hddmetrics WHERE agentid = @agentid AND id = @id", new
                 {
-                    AgentId = id
+                    AgentId = id,
+                    id = recordNumb
                 });
             }
         }
@@ -68,7 +68,7 @@ namespace MetricsManager.Repositories
         public DateTimeOffset GetLastTime(long agentId)
         {
             using var connection = new SQLiteConnection(ConnectionString);
-            var result = connection.QueryFirstOrDefault<HddMetricsModel>("SELECT * FROM cpumetrics ORDER BY time DESC LIMIT 1 WHERE agentid = @agentid",
+            var result = connection.QueryFirstOrDefault<HddMetricsModel>("SELECT max(time) FROM hddmetrics WHERE agentid = @agentid",
                 new
                 {
                     agentid = agentId
