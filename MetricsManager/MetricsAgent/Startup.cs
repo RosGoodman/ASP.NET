@@ -13,6 +13,8 @@ using AutoMapper;
 using MetricsAgent.Controllers;
 using Microsoft.OpenApi.Models;
 using System;
+using System.Reflection;
+using System.IO;
 
 namespace MetricsAgent
 {
@@ -44,6 +46,11 @@ namespace MetricsAgent
                         Url = new Uri("https://example.com/license"),
                     }
                 });
+                // ”казываем файл из которого брать комментарии дл€ Swagger UI
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+
             });
             #endregion
 

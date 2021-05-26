@@ -24,6 +24,17 @@ namespace MetricsManager.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>Получает мерики RAM на заданном диапазоне времени.</summary>
+        /// <remarks>
+        /// Пример запроса:
+        ///     GET agentId/1/from/2019-01-01/to/2022-01-12
+        /// </remarks>
+        /// <param name="id">ID агента.</param>
+        /// <param name="fromTime">Начальная метка времени.</param>
+        /// <param name="toTime">Конечная метка времени.</param>
+        /// <returns>Список мерик, которые сохранены в заданном диапазоне времени.</returns>
+        /// <response code="201">Если все хорошо.</response>
+        /// <response code="400">Если передали не правильные параметры.</response>
         [HttpGet("agentId/{id}/from/{fromTime}/to/{toTime}")]
         public IActionResult GetMetricsFromAgent([FromRoute] int id, [FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
@@ -44,6 +55,16 @@ namespace MetricsManager.Controllers
             return Ok(metrics);
         }
 
+        /// <summary>Получает указанную запись метрики RAM выбранного агента.</summary>
+        /// <remarks>
+        /// Пример запроса:
+        ///     GET agentId/1/recorNumb/23
+        /// </remarks>
+        /// <param name="id">ID агента.</param>
+        /// <param name="numb">Номер записи.</param>
+        /// <returns>Выбранная запись метрики.</returns>
+        /// <response code="201">Если все хорошо.</response>
+        /// <response code="400">Если передали не правильные параметры.</response>
         [HttpGet("agentId/{id}/recordNumb/{numb}")]
         public IActionResult GetMetricsFromAgent([FromRoute] long id, [FromRoute] long numb)
         {

@@ -24,6 +24,14 @@ namespace MetricsManager.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>Получить список всех агентов.</summary>
+        /// <remarks>
+        /// Пример запроса:
+        ///     GET all
+        /// </remarks>
+        /// <returns>Список всех зарегестрированных агентов.</returns>
+        /// <response code="201">Если все хорошо.</response>
+        /// <response code="400">Если передали не правильные параметры.</response>
         [HttpGet("all")]
         public IActionResult GetAllAgents()
         {
@@ -45,6 +53,15 @@ namespace MetricsManager.Controllers
             return Ok(response);
         }
 
+        /// <summary>Получить данные выбранного агента.</summary>
+        /// <remarks>
+        /// Пример запроса:
+        ///     GET AgentId/3
+        /// </remarks>
+        /// <param name="id">ID агента.</param>
+        /// <returns>Данные выбранного агента.</returns>
+        /// <response code="201">Если все хорошо.</response>
+        /// <response code="400">Если передали не правильные параметры.</response>
         [HttpGet("AgentId/{id}")]
         public IActionResult GetAgentById([FromRoute]int id)
         {
@@ -62,6 +79,15 @@ namespace MetricsManager.Controllers
             return Ok(metrics);
         }
 
+        /// <summary>Зарегестрировать нового агента.</summary>
+        /// <remarks>
+        /// Пример запроса:
+        ///     POST name/agent1/address/localhost:61977
+        /// </remarks>
+        /// <param name="name">Имя нового агента.</param>
+        /// <param name="address">Адрес нового агента.</param>
+        /// <response code="200">Запрос выполнен успешно.</response>
+        /// <response code="400">Если передали не правильные параметры.</response>
         [HttpPost("name/{name}/address/{address}")]
         public IActionResult CreateAgent([FromRoute] string name, [FromRoute] string address)
         {
