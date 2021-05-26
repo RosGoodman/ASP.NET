@@ -14,6 +14,7 @@ using Polly;
 using System;
 using AutoMapper;
 using MetricsManager.Controllers;
+using Microsoft.OpenApi.Models;
 
 namespace MetricsManager
 {
@@ -23,6 +24,32 @@ namespace MetricsManager
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            #region swagger
+            services.AddSwaggerGen();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "API сервиса агента сбора метрик",
+                    Description = "Тут можно поиграть с api нашего сервиса",
+                    TermsOfService = new Uri("https://example.com/terms"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Pavel",
+                        Email = string.Empty,
+                        Url = new Uri("https://kremlin.ru"),
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "можно указать под какой лицензией все опубликовано",
+                        Url = new Uri("https://example.com/license"),
+                    }
+                });
+            });
+            #endregion
+
             var mapperConfiguration = new MapperConfiguration(mp => mp.AddProfile(new MapperProfiles()));
             var mapper = mapperConfiguration.CreateMapper();
             services.AddSingleton(mapper);
@@ -39,6 +66,7 @@ namespace MetricsManager
             services.AddSingleton<INetworkMetricsRepository, NetworkMetricsRepository>();
             services.AddSingleton<IRamMetricsRepository, RamMetricsRepository>();
 
+            #region jobs
             // ДОбавляем сервисы
             services.AddSingleton<IJobFactory, SingletonJobFactory>();
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
@@ -69,6 +97,7 @@ namespace MetricsManager
                 cronExpression: "0/20 * * * * ?"));
 
             services.AddHostedService<QuartzHostedServise>();
+            #endregion
         }
 
         private void ConfigureServiceConnection(IServiceCollection services)
@@ -90,6 +119,16 @@ namespace MetricsManager
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMigrationRunner migrationRunner)
         {
+            // Включение middleware в пайплайн для обработки Swagger запросов.
+            app.UseSwagger();
+            // включение middleware для генерации swagger-ui 
+            // указываем Swagger JSON эндпоинт (куда обращаться за сгенерированной спецификацией
+            // по которой будет построен UI).
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API сервиса агента сбора метрик");
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

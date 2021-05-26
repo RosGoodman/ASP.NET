@@ -17,7 +17,7 @@ namespace MetricsManagerTests
         {
             _mock = new Mock<ICpuMetricsRepository>();
             _logger = new Mock<ILogger<CpuMetricsController>>();
-            _controller = new CpuMetricsController(_mock.Object, _logger.Object);
+            ////_controller = new CpuMetricsController(_mock.Object, _logger.Object);
         }
 
         [Fact]

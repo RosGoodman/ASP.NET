@@ -40,7 +40,7 @@ namespace MetricsManager.Jobs
                     ClientBaseAddress = agent.Address
                 });
 
-                if (allMetrics != null)
+                if (allMetrics != null && allMetrics != null)
                 {
                     foreach (var metric in allMetrics.Metrics)
                     {

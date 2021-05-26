@@ -17,7 +17,7 @@ namespace MetricsManagerTests
         {
             _mock = new Mock<IRamMetricsRepository>();
             _logger = new Mock<ILogger<RamMetricsController>>();
-            _controller = new RamMetricsController(_mock.Object, _logger.Object);
+            //_controller = new RamMetricsController(_mock.Object, _logger.Object);
         }
 
         [Fact]

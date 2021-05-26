@@ -17,7 +17,7 @@ namespace MetricsAgentTests
         {
             _mock = new Mock<IDotNetMetricsRepository>();
             _logger = new Mock<ILogger<DotNetMetricsAgentController>>();
-            _controller = new DotNetMetricsAgentController(_mock.Object, _logger.Object);
+            //_controller = new DotNetMetricsAgentController(_mock.Object, _logger.Object);
         }
 
         [Fact]

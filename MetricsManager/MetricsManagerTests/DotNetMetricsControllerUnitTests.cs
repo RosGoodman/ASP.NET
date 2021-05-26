@@ -17,7 +17,7 @@ namespace MetricsManagerTests
         {
             _mock = new Mock<IDotNetMetricsRepository>();
             _logger = new Mock<ILogger<DotNetMetricsController>>();
-            _controller = new DotNetMetricsController(_mock.Object, _logger.Object);
+            //_controller = new DotNetMetricsController(_mock.Object, _logger.Object);
         }
 
         [Fact]

@@ -25,7 +25,7 @@ namespace MetricsManagerTests
         {
             //Arrange
             _mock.Setup(repository => repository.GetAll()).Verifiable();
-            _controller = new AgentController(_mock.Object, _logger.Object);
+            //_controller = new AgentController(_mock.Object, _logger.Object);
 
             //Act
             var result = _controller.GetAllAgents();
@@ -41,7 +41,7 @@ namespace MetricsManagerTests
             int id = 1;
             long recordNumb = 2;
             _mock.Setup(repository => repository.GetByRecordNumb(id, recordNumb)).Verifiable();
-            _controller = new AgentController(_mock.Object, _logger.Object);
+            //_controller = new AgentController(_mock.Object, _logger.Object);
 
             //Act
             var result = _controller.GetAgentById(id);
@@ -61,7 +61,7 @@ namespace MetricsManagerTests
             agent.Address = address;
 
             _mock.Setup(repository => repository.Create(agent)).Verifiable();
-            _controller = new AgentController(_mock.Object, _logger.Object);
+            //_controller = new AgentController(_mock.Object, _logger.Object);
 
             //Act
             _controller.CreateAgent(name, address);
