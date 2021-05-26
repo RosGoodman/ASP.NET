@@ -11,6 +11,8 @@ using Quartz;
 using Quartz.Impl;
 using AutoMapper;
 using MetricsAgent.Controllers;
+using Microsoft.OpenApi.Models;
+using System;
 
 namespace MetricsAgent
 {
@@ -19,6 +21,32 @@ namespace MetricsAgent
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            #region swagger
+            services.AddSwaggerGen();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "API сервиса агента сбора метрик",
+                    Description = "Тут можно поиграть с api нашего сервиса",
+                    TermsOfService = new Uri("https://example.com/terms"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Pavel",
+                        Email = string.Empty,
+                        Url = new Uri("https://kremlin.ru"),
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "можно указать под какой лицензией все опубликовано",
+                        Url = new Uri("https://example.com/license"),
+                    }
+                });
+            });
+            #endregion
+
             var mapperConfiguration = new MapperConfiguration(mp => mp.AddProfile(new MapperProfiles()));
             var mapper = mapperConfiguration.CreateMapper();
             services.AddSingleton(mapper);
@@ -30,6 +58,8 @@ namespace MetricsAgent
             services.AddSingleton<IHddMetricsRepository, HddMetricsRepository>();
             services.AddSingleton<INetworkMetricsRepository, NetworkMetricsRepository>();
             services.AddSingleton<IRamMetricsRepository, RamMetricsRepository>();
+
+            #region jobs
 
             // ДОбавляем сервисы
             services.AddSingleton<IJobFactory, SingletonJobFactory>();
@@ -61,6 +91,8 @@ namespace MetricsAgent
                 cronExpression: "0/5 * * * * ?"));
 
             services.AddHostedService<QuartzHostedServise>();
+
+            #endregion
         }
 
         private void ConfigureServiceConnection(IServiceCollection services)
@@ -83,6 +115,13 @@ namespace MetricsAgent
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMigrationRunner migrationRunner)
         {
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API сервиса агента сбора метрик");
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

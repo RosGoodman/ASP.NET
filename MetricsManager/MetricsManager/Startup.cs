@@ -126,7 +126,7 @@ namespace MetricsManager
             // по которой будет построен UI).
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API сервиса агента сбора метрик");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API сервиса менеджера сбора метрик");
             });
 
             if (env.IsDevelopment())
